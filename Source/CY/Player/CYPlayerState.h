@@ -4,14 +4,29 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
+#include "AbilitySystemInterface.h"
 #include "CYPlayerState.generated.h"
 
+
+class UAbilitySystemComponent;
+class UCYAttributeSet;
 /**
  * 
  */
 UCLASS()
-class CY_API ACYPlayerState : public APlayerState
+class CY_API ACYPlayerState : public APlayerState, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 	
+public:
+	ACYPlayerState();
+
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	
+protected:
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TObjectPtr<UAbilitySystemComponent> ASC;
+
+	UPROPERTY()
+	TObjectPtr<UCYAttributeSet> AttributeSet;
 };
