@@ -12,6 +12,20 @@ public class CY : ModuleRules
 			"CY"
 		});
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
+		PublicDependencyModuleNames.AddRange(new string[] { 
+			"Core", 
+			"CoreUObject", 
+			"Engine", 
+			"InputCore", 
+			"EnhancedInput",
+			"Niagara",
+			"NavigationSystem",
+			"AIModule",
+			"GameFeatures",
+			"GameplayAbilities",
+			"GameplayTasks",
+			"GameplayTags",
+			"UMG",
+		});
 	}
 }

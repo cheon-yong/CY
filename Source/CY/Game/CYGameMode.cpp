@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "Game/CYGameMode.h"
-#include "CYCharacter.h"
+#include "Character/CYCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "CY.h"
 #include "Game/CYGameState.h"
