@@ -66,7 +66,7 @@ void ACYPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Green, *InputTag.ToString());
 	if (ACYCharacter* CYCharacter = CastChecked<ACYCharacter>(GetCharacter()))
 	{
-		CYCharacter->GetAbility
+		//CYCharacter->GetAbility
 	}
 }
 
