@@ -6,6 +6,11 @@
 #include "GameFramework/PlayerController.h"
 #include "CYPlayerController.generated.h"
 
+class UInputMappingContext;
+class UInputAction;
+class UCYInputConfig;
+struct FInputActionValue;
+struct FGameplayTag;
 /**
  * 
  */
@@ -15,8 +20,41 @@ class CY_API ACYPlayerController : public APlayerController
 	GENERATED_BODY()
 	
 public:
+	ACYPlayerController();
+
 	virtual void PostInitializeComponents() override;
 	virtual void PostNetInit() override;
 	virtual void BeginPlay() override;
+	virtual void SetupInputComponent() override;
 	virtual void OnPossess(APawn* InPawn) override;
+
+	// About Ability Input
+	void AbilityInputTagPressed(FGameplayTag InputTag);
+	void AbilityInputTagReleased(FGameplayTag InputTag);
+	void AbilityInputTagHeld(FGameplayTag InputTag);
+
+protected:
+	
+	// About Default Input
+	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
+	void Jump();
+	void StopJumping();
+
+private:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UCYInputConfig> InputConfig;
+		
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputMappingContext> InputContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> MoveAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> LookAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> JumpAction;
+
 };
