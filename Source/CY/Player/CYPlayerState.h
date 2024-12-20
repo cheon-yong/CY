@@ -8,7 +8,7 @@
 #include "CYPlayerState.generated.h"
 
 
-class UAbilitySystemComponent;
+class UCYAbilitySystemComponent;
 class UCYAttributeSet;
 /**
  * 
@@ -21,11 +21,11 @@ class CY_API ACYPlayerState : public APlayerState, public IAbilitySystemInterfac
 public:
 	ACYPlayerState();
 
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual UCYAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
-	TObjectPtr<UAbilitySystemComponent> ASC;
+	TObjectPtr<UCYAbilitySystemComponent> ASC;
 
 	UPROPERTY()
 	TObjectPtr<UCYAttributeSet> AttributeSet;
