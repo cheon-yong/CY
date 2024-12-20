@@ -27,6 +27,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TObjectPtr<UCYAbilitySystemComponent> ASC;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, Category = GAS)
 	TObjectPtr<UCYAttributeSet> AttributeSet;
 };

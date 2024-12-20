@@ -9,13 +9,15 @@
 class UInputMappingContext;
 class UInputAction;
 class UCYInputConfig;
+class UCYAbilitySystemComponent;
+
 struct FInputActionValue;
 struct FGameplayTag;
 /**
  * 
  */
 UCLASS()
-class CY_API ACYPlayerController : public APlayerController
+class CY_API ACYPlayerController : public APlayerController, 
 {
 	GENERATED_BODY()
 	
@@ -42,6 +44,9 @@ protected:
 	void StopJumping();
 
 private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GAS, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UCYAbilitySystemComponent> ASC;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCYInputConfig> InputConfig;
 		

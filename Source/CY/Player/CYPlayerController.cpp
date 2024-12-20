@@ -8,6 +8,7 @@
 #include "Input/CYInputConfig.h"
 #include "CY.h"
 #include "GameFramework/Character.h"
+#include "Player/CYPlayerState.h"
 #include "AbilitySystem/CYAbilitySystemComponent.h"
 #include <EnhancedInputSubsystems.h>
 #include <Engine.h>
@@ -51,33 +52,42 @@ void ACYPlayerController::SetupInputComponent()
 		CYInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACYPlayerController::Jump);
 		CYInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACYPlayerController::StopJumping);
 
-		CYInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
+		CYInputComponent->BindAbilityActions(InputConfig, this, &ACYPlayerController::AbilityInputTagPressed, &ACYPlayerController::AbilityInputTagReleased, &ACYPlayerController::AbilityInputTagHeld);
 	}
-
 }
 
 void ACYPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
+
+	ASC = GetPlayerState<ACYPlayerState>()->GetAbilitySystemComponent();
 }
 
 void ACYPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
 	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Green, *InputTag.ToString());
-	if (ACYCharacter* CYCharacter = CastChecked<ACYCharacter>(GetCharacter()))
+	if (ASC)
 	{
-		//CYCharacter->GetAbility
+		ASC->AbilityInputTagPressed(InputTag);
 	}
 }
 
 void ACYPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
 	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Red, *InputTag.ToString());
+	if (ASC)
+	{
+		ASC->AbilityInputTagReleased(InputTag);
+	}
 }
 
 void ACYPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
 	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Blue, *InputTag.ToString());
+	if (ASC)
+	{
+		ASC->AbilityInputTagHeld(InputTag);
+	}
 }
 
 void ACYPlayerController::Move(const FInputActionValue& Value)

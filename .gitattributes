@@ -1,0 +1,6 @@
+Content/ParagonKwang/Characters/Global/Eyes/Textures/EpicQuadPanorama_CC.uasset filter=lfs diff=lfs merge=lfs -text
+Content/ParagonKwang/Characters/Maps/BackGroundAssets/HDRI_Epic_Courtyard_Daylight.uasset filter=lfs diff=lfs merge=lfs -text
+Content/ParagonKwang/FX/Meshes/Shapes/SM_KwangTeleport.uasset filter=lfs diff=lfs merge=lfs -text
+Content/ParagonKwang/FX/Textures/Coords/T_Turbulence_AdditiveWarp_Linear.uasset filter=lfs diff=lfs merge=lfs -text
+Content/ParagonKwang/FX/Textures/Energy/Plasma/T_Plasma_Wisps.uasset filter=lfs diff=lfs merge=lfs -text
+Content/ParagonKwang/FX/Textures/Smoke/T_dust_burst_01.uasset filter=lfs diff=lfs merge=lfs -text
