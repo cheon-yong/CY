@@ -14,4 +14,5 @@ namespace CYGameplayTags
 	CY_API	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Move);
 	CY_API	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Look_Mouse);
 	CY_API	UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Attack_Basic);
+	CY_API  UE_DECLARE_GAMEPLAY_TAG_EXTERN(Gameplay_AbilityInputBlocked);
 }

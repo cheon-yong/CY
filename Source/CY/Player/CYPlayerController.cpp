@@ -52,7 +52,7 @@ void ACYPlayerController::SetupInputComponent()
 		CYInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACYPlayerController::Jump);
 		CYInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACYPlayerController::StopJumping);
 
-		CYInputComponent->BindAbilityActions(InputConfig, this, &ACYPlayerController::AbilityInputTagPressed, &ACYPlayerController::AbilityInputTagReleased, &ACYPlayerController::AbilityInputTagHeld);
+		CYInputComponent->BindAbilityActions(InputConfig, this, &ACYPlayerController::AbilityInputTagPressed, &ACYPlayerController::AbilityInputTagReleased);
 	}
 }
 
@@ -60,12 +60,24 @@ void ACYPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	ASC = GetPlayerState<ACYPlayerState>()->GetAbilitySystemComponent();
+	ASC = GetPlayerState<ACYPlayerState>()->GetCYAbilitySystemComponent();
+
+	AddCharacterAbilities();
+}
+
+void ACYPlayerController::PostProcessInput(const float DeltaTime, const bool bGamePaused)
+{
+	if (ASC)
+	{
+		ASC->ProcessAbilityInput(DeltaTime, bGamePaused);
+	}
+
+	Super::PostProcessInput(DeltaTime, bGamePaused);
 }
 
 void ACYPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Green, *InputTag.ToString());
+	//GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Green, *InputTag.ToString());
 	if (ASC)
 	{
 		ASC->AbilityInputTagPressed(InputTag);
@@ -74,19 +86,18 @@ void ACYPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 
 void ACYPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Red, *InputTag.ToString());
+	//GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Red, *InputTag.ToString());
 	if (ASC)
 	{
 		ASC->AbilityInputTagReleased(InputTag);
 	}
 }
 
-void ACYPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
+void ACYPlayerController::AddCharacterAbilities()
 {
-	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Blue, *InputTag.ToString());
 	if (ASC)
 	{
-		ASC->AbilityInputTagHeld(InputTag);
+		ASC->AddAbilities(StartAbilities);
 	}
 }
 

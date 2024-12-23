@@ -19,9 +19,12 @@ class CY_API ACYPlayerState : public APlayerState, public IAbilitySystemInterfac
 	GENERATED_BODY()
 	
 public:
-	ACYPlayerState();
+	ACYPlayerState(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	
 
-	virtual UCYAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	UFUNCTION(BlueprintCallable, Category = "PlayerState")
+	UCYAbilitySystemComponent* GetCYAbilitySystemComponent() const { return ASC; }
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)

@@ -17,13 +17,13 @@ class CY_API UCYEnhancedInputComponent : public UEnhancedInputComponent
 	GENERATED_BODY()
 	
 public:
-	template<class UserClass, typename PressedFuncType, typename ReleasedFuncType, typename HeldFuncType>
-	void BindAbilityActions(const UCYInputConfig* InputConfig, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc, HeldFuncType HeldFunc);
+	template<class UserClass, typename PressedFuncType, typename ReleasedFuncType>
+	void BindAbilityActions(const UCYInputConfig* InputConfig, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc);
 	
 };
 
-template<class UserClass, typename PressedFuncType, typename ReleasedFuncType, typename HeldFuncType>
-void UCYEnhancedInputComponent::BindAbilityActions(const UCYInputConfig* InputConfig, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc, HeldFuncType HeldFunc)
+template<class UserClass, typename PressedFuncType, typename ReleasedFuncType>
+void UCYEnhancedInputComponent::BindAbilityActions(const UCYInputConfig* InputConfig, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc)
 {
 	check(InputConfig);
 
@@ -39,11 +39,6 @@ void UCYEnhancedInputComponent::BindAbilityActions(const UCYInputConfig* InputCo
 			if (ReleasedFunc)
 			{
 				BindAction(Action.InputAction, ETriggerEvent::Completed, Object, ReleasedFunc, Action.InputTag);
-			}
-
-			if (HeldFunc)
-			{
-				BindAction(Action.InputAction, ETriggerEvent::Triggered, Object, HeldFunc, Action.InputTag);
 			}
 		}
 	}

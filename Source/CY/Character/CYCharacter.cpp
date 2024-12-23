@@ -68,7 +68,7 @@ void ACYCharacter::PossessedBy(AController* NewController)
 
 	if (ACYPlayerState* CYPS = GetPlayerState<ACYPlayerState>())
 	{
-		ASC = CYPS->GetAbilitySystemComponent();
+		ASC = CYPS->GetCYAbilitySystemComponent();
 		ASC->InitAbilityActorInfo(CYPS, this);
 	}
 }

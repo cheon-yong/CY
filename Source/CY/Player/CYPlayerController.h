@@ -10,6 +10,7 @@ class UInputMappingContext;
 class UInputAction;
 class UCYInputConfig;
 class UCYAbilitySystemComponent;
+class UCYGameplayAbility;
 
 struct FInputActionValue;
 struct FGameplayTag;
@@ -17,7 +18,7 @@ struct FGameplayTag;
  * 
  */
 UCLASS()
-class CY_API ACYPlayerController : public APlayerController, 
+class CY_API ACYPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
@@ -29,14 +30,17 @@ public:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 	virtual void OnPossess(APawn* InPawn) override;
+	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
+
 
 	// About Ability Input
 	void AbilityInputTagPressed(FGameplayTag InputTag);
 	void AbilityInputTagReleased(FGameplayTag InputTag);
-	void AbilityInputTagHeld(FGameplayTag InputTag);
 
 protected:
 	
+	void AddCharacterAbilities();
+
 	// About Default Input
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
@@ -49,6 +53,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCYInputConfig> InputConfig;
+
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TArray<TSubclassOf<UCYGameplayAbility>> StartAbilities;
 		
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputMappingContext> InputContext;
