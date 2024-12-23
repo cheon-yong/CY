@@ -65,6 +65,18 @@ void UCYAbilitySystemComponent::AddAbilities(TArray<TSubclassOf<UCYGameplayAbili
 		//GiveAbilityAndActivateOnce(AbilitySpec);
 		if (const UCYGameplayAbility* CYAbility = Cast<UCYGameplayAbility>(AbilitySpec.Ability))
 		{
+			GiveAbility(AbilitySpec);
+		}
+	}
+}
+
+void UCYAbilitySystemComponent::AddInputAbilities(TArray<TSubclassOf<UCYGameplayAbility>> Abilities)
+{
+	for (TSubclassOf<UGameplayAbility> AbilityClass : Abilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		if (const UCYGameplayAbility* CYAbility = Cast<UCYGameplayAbility>(AbilitySpec.Ability))
+		{
 			AbilitySpec.DynamicAbilityTags.AddTag(CYAbility->InputTag);
 			GiveAbility(AbilitySpec);
 		}

@@ -61,8 +61,6 @@ void ACYPlayerController::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 
 	ASC = GetPlayerState<ACYPlayerState>()->GetCYAbilitySystemComponent();
-
-	AddCharacterAbilities();
 }
 
 void ACYPlayerController::PostProcessInput(const float DeltaTime, const bool bGamePaused)
@@ -90,14 +88,6 @@ void ACYPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 	if (ASC)
 	{
 		ASC->AbilityInputTagReleased(InputTag);
-	}
-}
-
-void ACYPlayerController::AddCharacterAbilities()
-{
-	if (ASC)
-	{
-		ASC->AddAbilities(StartAbilities);
 	}
 }
 

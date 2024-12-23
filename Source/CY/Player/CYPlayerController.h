@@ -10,7 +10,6 @@ class UInputMappingContext;
 class UInputAction;
 class UCYInputConfig;
 class UCYAbilitySystemComponent;
-class UCYGameplayAbility;
 
 struct FInputActionValue;
 struct FGameplayTag;
@@ -38,24 +37,18 @@ public:
 	void AbilityInputTagReleased(FGameplayTag InputTag);
 
 protected:
-	
-	void AddCharacterAbilities();
-
 	// About Default Input
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Jump();
 	void StopJumping();
 
-private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GAS, meta = (AllowPrivateAccess = "true"))
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = GAS, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCYAbilitySystemComponent> ASC;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCYInputConfig> InputConfig;
-
-	UPROPERTY(EditAnywhere, Category = GAS)
-	TArray<TSubclassOf<UCYGameplayAbility>> StartAbilities;
 		
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputMappingContext> InputContext;

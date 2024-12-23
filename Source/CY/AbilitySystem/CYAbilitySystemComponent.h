@@ -28,6 +28,7 @@ public:
 	void AbilityInputTagReleased(const FGameplayTag& InputTag);
 
 	void AddAbilities(TArray<TSubclassOf<UCYGameplayAbility>> Abilities);
+	void AddInputAbilities(TArray<TSubclassOf<UCYGameplayAbility>> Abilities);
 
 	void ProcessAbilityInput(float DeltaTime, bool bGamePaused);
 	void ClearAbilityInput();

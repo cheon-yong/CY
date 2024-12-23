@@ -5,38 +5,32 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "AbilitySystemInterface.h"
 #include "CYCharacter.generated.h"
 
-class USpringArmComponent;
-class UCameraComponent;
-class UInputMappingContext;
-class UInputAction;
 class AController;
 class UCYAbilitySystemComponent;
+class UCYGameplayAbility;
+class UCYAttributeSet;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config=Game)
-class ACYCharacter : public ACharacter
+class ACYCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
-
-	/** Camera boom positioning the camera behind the character */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	USpringArmComponent* CameraBoom;
-
-	/** Follow camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* FollowCamera;
-	
-	/** MappingContext */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputMappingContext* DefaultMappingContext;
 
 public:
 	ACYCharacter();
 	
+	UFUNCTION(BlueprintCallable, Category = "PlayerState")
+	UCYAbilitySystemComponent* GetCYAbilitySystemComponent() const { return ASC; }
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+
+	virtual void AddCharacterAbilities();
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -46,17 +40,15 @@ protected:
 
 	virtual void PossessedBy(AController* NewController) override;
 
-public:
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-
-
-
-	
 protected:
-	UPROPERTY(EditAnywhere, Category = GAS)
+	UPROPERTY(BlueprintReadOnly, Category = GAS)
 	TObjectPtr<UCYAbilitySystemComponent> ASC;
+
+	UPROPERTY(BlueprintReadOnly, Category = GAS)
+	TObjectPtr<UCYAttributeSet> AttributeSet;
+	
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TArray<TSubclassOf<UCYGameplayAbility>> StartAbilities;
+
 };
 
