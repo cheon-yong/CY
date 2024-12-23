@@ -13,6 +13,8 @@ UCYAbilitySystemComponent::UCYAbilitySystemComponent(const FObjectInitializer& O
 	InputPressedSpecHandles.Reset();
 	InputReleasedSpecHandles.Reset();
 	InputHeldSpecHandles.Reset();
+
+	SetIsReplicated(true);
 }
 
 void UCYAbilitySystemComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -58,11 +60,25 @@ void UCYAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& Inpu
 
 void UCYAbilitySystemComponent::AddAbilities(TArray<TSubclassOf<UCYGameplayAbility>> Abilities)
 {
+	Server_AddAbilities(Abilities);
+}
+
+void UCYAbilitySystemComponent::AddInputAbilities(TArray<TSubclassOf<UCYGameplayAbility>> Abilities)
+{
+	Server_AddInputAbilities(Abilities);
+}
+
+bool UCYAbilitySystemComponent::Server_AddAbilities_Validate(const TArray<TSubclassOf<UCYGameplayAbility>>& Abilities)
+{
+	return true;
+}
+
+
+void UCYAbilitySystemComponent::Server_AddAbilities_Implementation(const TArray<TSubclassOf<UCYGameplayAbility>>& Abilities)
+{
 	for (TSubclassOf<UGameplayAbility> AbilityClass : Abilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
-		//GiveAbility(AbilitySpec);
-		//GiveAbilityAndActivateOnce(AbilitySpec);
 		if (const UCYGameplayAbility* CYAbility = Cast<UCYGameplayAbility>(AbilitySpec.Ability))
 		{
 			GiveAbility(AbilitySpec);
@@ -70,7 +86,13 @@ void UCYAbilitySystemComponent::AddAbilities(TArray<TSubclassOf<UCYGameplayAbili
 	}
 }
 
-void UCYAbilitySystemComponent::AddInputAbilities(TArray<TSubclassOf<UCYGameplayAbility>> Abilities)
+bool UCYAbilitySystemComponent::Server_AddInputAbilities_Validate(const TArray<TSubclassOf<UCYGameplayAbility>>& Abilities)
+{
+	return true;
+}
+
+
+void UCYAbilitySystemComponent::Server_AddInputAbilities_Implementation(const TArray<TSubclassOf<UCYGameplayAbility>>& Abilities)
 {
 	for (TSubclassOf<UGameplayAbility> AbilityClass : Abilities)
 	{
@@ -83,6 +105,7 @@ void UCYAbilitySystemComponent::AddInputAbilities(TArray<TSubclassOf<UCYGameplay
 	}
 }
 
+PRAGMA_DISABLE_OPTIMIZATION
 void UCYAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGamePaused)
 {
 	if (HasMatchingGameplayTag(Gameplay_AbilityInputBlocked))
@@ -163,10 +186,16 @@ void UCYAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGameP
 	InputPressedSpecHandles.Reset();
 	InputReleasedSpecHandles.Reset();
 }
+PRAGMA_ENABLE_OPTIMIZATION
 
 void UCYAbilitySystemComponent::ClearAbilityInput()
 {
 	InputPressedSpecHandles.Reset();
 	InputReleasedSpecHandles.Reset();
 	InputHeldSpecHandles.Reset();
+}
+
+void UCYAbilitySystemComponent::OnRep_ActivateAbilities()
+{
+	Super::OnRep_ActivateAbilities();
 }

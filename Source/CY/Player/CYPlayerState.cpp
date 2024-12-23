@@ -22,3 +22,10 @@ UAbilitySystemComponent* ACYPlayerState::GetAbilitySystemComponent() const
 {
 	return GetCYAbilitySystemComponent();
 }
+
+void ACYPlayerState::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	
+}

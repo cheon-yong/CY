@@ -17,7 +17,6 @@ void UCYGA_MeleeAttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-
 	UCYAT_Trace* AttackTraceTask = UCYAT_Trace::CreateTask(this, TargetActorClass);
 	AttackTraceTask->OnComplete.AddDynamic(this, &UCYGA_MeleeAttackHitCheck::OnTraceResultCallback);
 	AttackTraceTask->ReadyForActivation();

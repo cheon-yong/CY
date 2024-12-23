@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/Attributes/CYAttributeSet.h"
 #include "GameplayEffectExtension.h"
+#include "Net/UnrealNetwork.h"
 
 UCYAttributeSet::UCYAttributeSet() :
 	AttackRange(100.0f),
@@ -15,6 +16,15 @@ UCYAttributeSet::UCYAttributeSet() :
 	Damage(0.0f)
 {
 	InitHealth(GetMaxHealth());
+}
+
+void UCYAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION_NOTIFY(UCYAttributeSet, Health, COND_OwnerOnly, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UCYAttributeSet, MaxHealth, COND_OwnerOnly, REPNOTIFY_Always);
+
 }
 
 void UCYAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -44,6 +54,9 @@ bool UCYAttributeSet::PreGameplayEffectExecute(FGameplayEffectModCallbackData& D
 		}
 	}
 
+	HealthBeforeAttributeChange = GetHealth();
+	MaxHealthBeforeAttributeChange = GetMaxHealth();
+
 	return true;
 }
 
@@ -52,6 +65,10 @@ void UCYAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 	Super::PostGameplayEffectExecute(Data);
 
 	float MinimumHealth = 0.0f;
+
+	const FGameplayEffectContextHandle& EffectContext = Data.EffectSpec.GetEffectContext();
+	AActor* Instigator = EffectContext.GetOriginalInstigator();
+	AActor* Causer = EffectContext.GetEffectCauser();
 
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
@@ -63,11 +80,35 @@ void UCYAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 		SetDamage(0.0f);
 	}
 
-	/*if ((GetHealth() <= 0.0f) && !bOutOfHealth)
+	if ((GetHealth() <= 0.0f) && !bOutOfHealth)
 	{
-		Data.Target.AddLooseGameplayTag(ABTAG_CHARACTER_ISDEAD);
-		OnOutOfHealth.Broadcast();
+		//Data.Target.AddLooseGameplayTag(ABTAG_CHARACTER_ISDEAD);
+		OnOutOfHealth.Broadcast(Instigator, Causer, &Data.EffectSpec, Data.EvaluatedData.Magnitude, HealthBeforeAttributeChange, GetHealth());
 	}
 
-	bOutOfHealth = (GetHealth() <= 0.0f);*/
+	bOutOfHealth = (GetHealth() <= 0.0f);
+}
+
+void UCYAttributeSet::OnRep_Health(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UCYAttributeSet, Health, OldValue);
+
+	const float CurrentHealth = GetHealth();
+	const float EstimatedMagnitude = CurrentHealth - OldValue.GetCurrentValue();
+
+	OnHealthChanged.Broadcast(nullptr, nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentHealth);
+
+	if (!bOutOfHealth && CurrentHealth <= 0.0f)
+	{
+		OnOutOfHealth.Broadcast(nullptr, nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentHealth);
+	}
+
+	bOutOfHealth = (CurrentHealth <= 0.0f);
+}
+
+void UCYAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UCYAttributeSet, MaxHealth, OldValue);
+
+	OnMaxHealthChanged.Broadcast(nullptr, nullptr, nullptr, GetMaxHealth() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetMaxHealth());
 }

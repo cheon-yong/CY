@@ -30,8 +30,17 @@ public:
 	void AddAbilities(TArray<TSubclassOf<UCYGameplayAbility>> Abilities);
 	void AddInputAbilities(TArray<TSubclassOf<UCYGameplayAbility>> Abilities);
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_AddInputAbilities(const TArray<TSubclassOf<UCYGameplayAbility>>& Abilities);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_AddAbilities(const TArray<TSubclassOf<UCYGameplayAbility>>& Abilities);
+
 	void ProcessAbilityInput(float DeltaTime, bool bGamePaused);
 	void ClearAbilityInput();
+
+protected:
+	virtual void OnRep_ActivateAbilities() override;
 
 protected:
 	// Handles to abilities that had their input pressed this frame.

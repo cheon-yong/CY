@@ -26,6 +26,8 @@ public:
 	UCYAbilitySystemComponent* GetCYAbilitySystemComponent() const { return ASC; }
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
+	virtual void PostInitializeComponents() override;
+
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TObjectPtr<UCYAbilitySystemComponent> ASC;
