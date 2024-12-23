@@ -12,7 +12,8 @@ ACYPlayerState::ACYPlayerState(const FObjectInitializer& ObjectInitializer)
 	ASC = ObjectInitializer.CreateDefaultSubobject<UCYAbilitySystemComponent>(this, TEXT("ASC"));
 	ASC->SetIsReplicated(true);
 	ASC->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
-
+	
+	
 	NetUpdateFrequency = 100.0f;
 
 	AttributeSet = CreateDefaultSubobject<UCYAttributeSet>(TEXT("AttributeSet"));

@@ -31,6 +31,12 @@ public:
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
 
+	UFUNCTION(BlueprintCallable, Category = "CY|PlayerController")
+	UCYAbilitySystemComponent* GetCYAbilitySystemComponent() const;
+
+	/*virtual void InitPlayerState() override;
+	virtual void CleanupPlayerState() override;
+	virtual void OnRep_PlayerState() override;*/
 
 	// About Ability Input
 	void AbilityInputTagPressed(FGameplayTag InputTag);
@@ -44,8 +50,6 @@ protected:
 	void StopJumping();
 
 protected:
-	UPROPERTY(BlueprintReadOnly, Category = GAS, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UCYAbilitySystemComponent> ASC;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCYInputConfig> InputConfig;

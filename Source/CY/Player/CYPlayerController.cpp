@@ -56,84 +56,49 @@ void ACYPlayerController::SetupInputComponent()
 	}
 }
 
-UE_DISABLE_OPTIMIZATION
 void ACYPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	ACYPlayerState* GS = GetPlayerState<ACYPlayerState>();
-	ASC = GetPlayerState<ACYPlayerState>()->GetCYAbilitySystemComponent();
 }
-UE_ENABLE_OPTIMIZATION
+
 
 void ACYPlayerController::PostProcessInput(const float DeltaTime, const bool bGamePaused)
 {
-	if (GetRemoteRole() == ROLE_Authority)
+	
+	if (UCYAbilitySystemComponent* ASC = GetCYAbilitySystemComponent())
 	{
-		if (ASC)
-		{
-			ASC->ProcessAbilityInput(DeltaTime, bGamePaused);
-		}
+		ASC->ProcessAbilityInput(DeltaTime, bGamePaused);
 	} 
-	else if (GetRemoteRole() == ROLE_SimulatedProxy)
-	{
-		if (ACYPlayerState* CYPlayerState = GetPlayerState<ACYPlayerState>())
-		{
-			CYPlayerState->GetCYAbilitySystemComponent()->ProcessAbilityInput(DeltaTime, bGamePaused);
-		}
-	}
-
-	// TEST
-	FString RoleString;
-	FString NetModeString;
-
-	switch (GetRemoteRole())
-	{
-	case ROLE_None:
-		RoleString = TEXT("ROLE_None");
-		break;
-	case ROLE_SimulatedProxy:
-		RoleString = TEXT("ROLE_SimulatedProxy");
-		break;
-	case ROLE_AutonomousProxy:
-		RoleString = TEXT("ROLE_AutonomousProxy");
-		break;
-	case ROLE_Authority:
-		RoleString = TEXT("ROLE_Authority");
-		break;
-	default:
-		RoleString = TEXT("Unknown");
-		break;
-	}
-
-	switch (GetWorld()->GetNetMode())
-	{
-	case NM_Standalone:
-		NetModeString = TEXT("Standalone");
-		break;
-	case NM_DedicatedServer:
-		NetModeString = TEXT("Dedicated Server");
-		break;
-	case NM_ListenServer:
-		NetModeString = TEXT("Listen Server");
-		break;
-	case NM_Client:
-		NetModeString = FString::Printf(TEXT("Client (PlayerIndex: %d)"), GetLocalRole() == ROLE_AutonomousProxy ? 1 : 0);
-		break;
-	default:
-		NetModeString = TEXT("Unknown");
-		break;
-	}
-
-	UE_LOG(LogTemp, Log, TEXT("NetMode: %s | RemoteRole: %s"), *NetModeString, *RoleString);
 
 	Super::PostProcessInput(DeltaTime, bGamePaused);
 }
 
+UCYAbilitySystemComponent* ACYPlayerController::GetCYAbilitySystemComponent() const
+{
+	const ACYPlayerState* CYPS = GetPlayerState<ACYPlayerState>();
+	return (CYPS ? CYPS->GetCYAbilitySystemComponent() : nullptr);
+}
+
+//void ACYPlayerController::InitPlayerState()
+//{
+//	Super::InitPlayerState();
+//}
+//
+//void ACYPlayerController::CleanupPlayerState()
+//{
+//	Super::CleanupPlayerState();
+//}
+//
+//void ACYPlayerController::OnRep_PlayerState()
+//{
+//	Super::OnRep_PlayerState();
+//}
+
 void ACYPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
 	//GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Green, *InputTag.ToString());
-	if (ASC)
+	if (UCYAbilitySystemComponent* ASC = GetCYAbilitySystemComponent())
 	{
 		ASC->AbilityInputTagPressed(InputTag);
 	}
@@ -142,7 +107,7 @@ void ACYPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 void ACYPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
 	//GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Red, *InputTag.ToString());
-	if (ASC)
+	if (UCYAbilitySystemComponent* ASC = GetCYAbilitySystemComponent())
 	{
 		ASC->AbilityInputTagReleased(InputTag);
 	}
