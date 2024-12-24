@@ -7,6 +7,7 @@
 
 UCYAnimNotify_AttackHitCheck::UCYAnimNotify_AttackHitCheck()
 {
+	
 }
 
 FString UCYAnimNotify_AttackHitCheck::GetNotifyName_Implementation() const
@@ -14,17 +15,20 @@ FString UCYAnimNotify_AttackHitCheck::GetNotifyName_Implementation() const
 	return TEXT("AttackHitCheck");
 }
 
+UE_DISABLE_OPTIMIZATION
 void UCYAnimNotify_AttackHitCheck::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
 {
 	Super::Notify(MeshComp, Animation, EventReference);
 
 	if (MeshComp)
 	{
-		AActor* OwnerActor = MeshComp->GetOwner();
-		if (OwnerActor)
+		APawn* OwnerPawn = Cast<APawn>(MeshComp->GetOwner());
+		if (OwnerPawn && OwnerPawn->IsLocallyControlled())
 		{
 			FGameplayEventData PayloadData;
-			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwnerActor, TriggerGameplayTag, PayloadData);
+			PayloadData.Instigator = OwnerPawn;
+			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwnerPawn, TriggerGameplayTag, PayloadData);
 		}
 	}
 }
+UE_ENABLE_OPTIMIZATION
