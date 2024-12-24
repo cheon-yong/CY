@@ -16,9 +16,6 @@ void UCYGA_MeleeAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	ACYCharacter* CYCharacter = CastChecked<ACYCharacter>(ActorInfo->AvatarActor.Get());
-	CYCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
-
-	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Green, TEXT("Melee Attack"));
 
 	UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), AttackMontage, 1.0f);
 	PlayAttackTask->OnCompleted.AddDynamic(this, &UCYGA_MeleeAttack::OnCompleteCallback);

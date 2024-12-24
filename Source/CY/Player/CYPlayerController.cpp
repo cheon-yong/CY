@@ -60,13 +60,15 @@ void ACYPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
+	ACYPlayerState* GS = GetPlayerState<ACYPlayerState>();
+	ASC = GetPlayerState<ACYPlayerState>()->GetCYAbilitySystemComponent();
 }
 
 
 void ACYPlayerController::PostProcessInput(const float DeltaTime, const bool bGamePaused)
 {
 	
-	if (UCYAbilitySystemComponent* ASC = GetCYAbilitySystemComponent())
+	if (ASC)
 	{
 		ASC->ProcessAbilityInput(DeltaTime, bGamePaused);
 	} 
@@ -76,8 +78,7 @@ void ACYPlayerController::PostProcessInput(const float DeltaTime, const bool bGa
 
 UCYAbilitySystemComponent* ACYPlayerController::GetCYAbilitySystemComponent() const
 {
-	const ACYPlayerState* CYPS = GetPlayerState<ACYPlayerState>();
-	return (CYPS ? CYPS->GetCYAbilitySystemComponent() : nullptr);
+	return ASC;
 }
 
 //void ACYPlayerController::InitPlayerState()
@@ -90,15 +91,19 @@ UCYAbilitySystemComponent* ACYPlayerController::GetCYAbilitySystemComponent() co
 //	Super::CleanupPlayerState();
 //}
 //
-//void ACYPlayerController::OnRep_PlayerState()
-//{
-//	Super::OnRep_PlayerState();
-//}
+void ACYPlayerController::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+
+	ACYPlayerState* GS = GetPlayerState<ACYPlayerState>();
+	ASC = GetPlayerState<ACYPlayerState>()->GetCYAbilitySystemComponent();
+}
+
 
 void ACYPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
 	//GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Green, *InputTag.ToString());
-	if (UCYAbilitySystemComponent* ASC = GetCYAbilitySystemComponent())
+	if (ASC)
 	{
 		ASC->AbilityInputTagPressed(InputTag);
 	}
@@ -107,7 +112,7 @@ void ACYPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 void ACYPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
 	//GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Red, *InputTag.ToString());
-	if (UCYAbilitySystemComponent* ASC = GetCYAbilitySystemComponent())
+	if (ASC)
 	{
 		ASC->AbilityInputTagReleased(InputTag);
 	}

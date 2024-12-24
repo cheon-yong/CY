@@ -79,3 +79,15 @@ void ACYPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
+
+void ACYPlayerCharacter::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+
+	if (ACYPlayerState* CYPS = GetPlayerState<ACYPlayerState>())
+	{
+		ASC = CYPS->GetCYAbilitySystemComponent();
+		ASC->InitAbilityActorInfo(CYPS, this);
+		AddCharacterAbilities();
+	}
+}
