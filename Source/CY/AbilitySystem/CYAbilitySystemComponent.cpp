@@ -60,12 +60,33 @@ void UCYAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& Inpu
 
 void UCYAbilitySystemComponent::AddAbilities(TArray<TSubclassOf<UCYGameplayAbility>> Abilities)
 {
-	Server_AddAbilities(Abilities);
+	if (!GetOwner()->HasAuthority())
+		return;
+
+	for (TSubclassOf<UGameplayAbility> AbilityClass : Abilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		if (const UCYGameplayAbility* CYAbility = Cast<UCYGameplayAbility>(AbilitySpec.Ability))
+		{
+			GiveAbility(AbilitySpec);
+		}
+	}
 }
 
 void UCYAbilitySystemComponent::AddInputAbilities(TArray<TSubclassOf<UCYGameplayAbility>> Abilities)
 {
-	Server_AddInputAbilities(Abilities);
+	if (!GetOwner()->HasAuthority())
+		return;
+
+	for (TSubclassOf<UGameplayAbility> AbilityClass : Abilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		if (const UCYGameplayAbility* CYAbility = Cast<UCYGameplayAbility>(AbilitySpec.Ability))
+		{
+			AbilitySpec.DynamicAbilityTags.AddTag(CYAbility->InputTag);
+			GiveAbility(AbilitySpec);
+		}
+	}
 }
 
 bool UCYAbilitySystemComponent::Server_AddAbilities_Validate(const TArray<TSubclassOf<UCYGameplayAbility>>& Abilities)

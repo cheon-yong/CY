@@ -17,6 +17,15 @@ void UCYGA_MeleeAttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	if (HasAuthority(&ActivationInfo))
+	{
+		UE_LOG(LogTemp, Log, TEXT("Authority"));
+		
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("Not Authority"));
+	}
 	UCYAT_Trace* AttackTraceTask = UCYAT_Trace::CreateTask(this, TargetActorClass);
 	AttackTraceTask->OnComplete.AddDynamic(this, &UCYGA_MeleeAttackHitCheck::OnTraceResultCallback);
 	AttackTraceTask->ReadyForActivation();
@@ -24,51 +33,38 @@ void UCYGA_MeleeAttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle
 
 void UCYGA_MeleeAttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTargetDataHandle& TargetDataHandle)
 {
-	if (UAbilitySystemBlueprintLibrary::TargetDataHasHitResult(TargetDataHandle, 0))
+	if (true)
 	{
-		FHitResult HitResult = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(TargetDataHandle, 0);
-
-		UAbilitySystemComponent* SourceASC = GetAbilitySystemComponentFromActorInfo_Checked();
-		UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitResult.GetActor());
-		if (!SourceASC || !TargetASC)
+		if (UAbilitySystemBlueprintLibrary::TargetDataHasHitResult(TargetDataHandle, 0))
 		{
-			UE_LOG(LogTemp, Error, TEXT("ASC not found!"));
-			return;
-		}
+			FHitResult HitResult = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(TargetDataHandle, 0);
 
-		const UCYAttributeSet* SourceAttribute = SourceASC->GetSet<UCYAttributeSet>();
+			UAbilitySystemComponent* SourceASC = GetAbilitySystemComponentFromActorInfo_Checked();
+			UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitResult.GetActor());
+			if (!SourceASC || !TargetASC)
+			{
+				UE_LOG(LogTemp, Error, TEXT("ASC not found!"));
+				return;
+			}
 
-		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, 1);
-		if (EffectSpecHandle.IsValid())
-		{
-			//EffectSpecHandle.Data->SetSetByCallerMagnitude(ABTAG_DATA_DAMAGE, -SourceAttribute->GetAttackRate());			
-			ApplyGameplayEffectSpecToTarget(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, EffectSpecHandle, TargetDataHandle);
+			const UCYAttributeSet* SourceAttribute = SourceASC->GetSet<UCYAttributeSet>();
 
-			FGameplayEffectContextHandle CueContextHandle = UAbilitySystemBlueprintLibrary::GetEffectContext(EffectSpecHandle);
-			CueContextHandle.AddHitResult(HitResult);
-			FGameplayCueParameters CueParam;
-			CueParam.EffectContext = CueContextHandle;
+			FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, 1);
+			if (EffectSpecHandle.IsValid())
+			{
+				//EffectSpecHandle.Data->SetSetByCallerMagnitude(ABTAG_DATA_DAMAGE, -SourceAttribute->GetAttackRate());			
+				ApplyGameplayEffectSpecToTarget(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, EffectSpecHandle, TargetDataHandle);
 
-			//TargetASC->ExecuteGameplayCue(ABTAG_GAMEPLAYCUE_CHARACTER_ATTACKHIT, CueParam);
+				FGameplayEffectContextHandle CueContextHandle = UAbilitySystemBlueprintLibrary::GetEffectContext(EffectSpecHandle);
+				CueContextHandle.AddHitResult(HitResult);
+				FGameplayCueParameters CueParam;
+				CueParam.EffectContext = CueContextHandle;
+
+				//TargetASC->ExecuteGameplayCue(ABTAG_GAMEPLAYCUE_CHARACTER_ATTACKHIT, CueParam);
+			}
 		}
 	}
-	else if (UAbilitySystemBlueprintLibrary::TargetDataHasActor(TargetDataHandle, 0))
-	{
-		UAbilitySystemComponent* SourceASC = GetAbilitySystemComponentFromActorInfo_Checked();
-
-		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, 1);
-		if (EffectSpecHandle.IsValid())
-		{
-			ApplyGameplayEffectSpecToTarget(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, EffectSpecHandle, TargetDataHandle);
-
-			FGameplayEffectContextHandle CueContextHandle = UAbilitySystemBlueprintLibrary::GetEffectContext(EffectSpecHandle);
-			CueContextHandle.AddActors(TargetDataHandle.Data[0].Get()->GetActors(), false);
-			FGameplayCueParameters CueParam;
-			CueParam.EffectContext = CueContextHandle;
-
-			//SourceASC->ExecuteGameplayCue(ABTAG_GAMEPLAYCUE_CHARACTER_ATTACKHIT, CueParam);
-		}
-	}
+	
 
 	bool bReplicatedEndAbility = true;
 	bool bWasCancelled = false;
