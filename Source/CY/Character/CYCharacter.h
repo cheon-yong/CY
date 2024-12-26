@@ -17,6 +17,8 @@ struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInitASCDelegate, UCYAbilitySystemComponent*, ASC);
+
 UCLASS(config=Game)
 class ACYCharacter : public ACharacter, public IAbilitySystemInterface
 {
@@ -40,6 +42,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void PossessedBy(AController* NewController) override;
+
+public:
+	UPROPERTY(BlueprintAssignable)
+	FOnInitASCDelegate OnInitASC;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = GAS)

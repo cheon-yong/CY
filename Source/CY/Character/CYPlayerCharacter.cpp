@@ -72,6 +72,9 @@ void ACYPlayerCharacter::PossessedBy(AController* NewController)
 		ASC = CYPS->GetCYAbilitySystemComponent();
 		ASC->InitAbilityActorInfo(CYPS, this);
 		AddCharacterAbilities();
+
+		OnInitASC.Broadcast(ASC);
+		OnInitASC.Clear();
 	}
 }
 
@@ -89,5 +92,8 @@ void ACYPlayerCharacter::OnRep_PlayerState()
 		ASC = CYPS->GetCYAbilitySystemComponent();
 		ASC->InitAbilityActorInfo(CYPS, this);
 		AddCharacterAbilities();
+
+		OnInitASC.Broadcast(ASC);
+		OnInitASC.Clear();
 	}
 }

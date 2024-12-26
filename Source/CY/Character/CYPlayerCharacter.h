@@ -11,6 +11,8 @@ class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 
+
+
 /**
  * 
  */
@@ -28,6 +30,7 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	virtual void AddCharacterAbilities() override;
+
 
 protected:
 

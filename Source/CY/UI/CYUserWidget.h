@@ -8,7 +8,7 @@
 
 #include "CYUserWidget.generated.h"
 
-class UAbilitySystemComponent;
+class UCYAbilitySystemComponent;
 
 /**
  * 
@@ -20,10 +20,14 @@ class CY_API UCYUserWidget : public UUserWidget, public IAbilitySystemInterface
 	
 public:
 	virtual void SetAbilitySystemComponent(AActor* InOwner);
+
+	UFUNCTION()
+	virtual void SetAbilitySystemComponentByASC(UCYAbilitySystemComponent* OwnerASC);
+
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual UCYAbilitySystemComponent* GetCYAbilitySystemComponent() const { return ASC; }
 
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
-	TObjectPtr<UAbilitySystemComponent> ASC;
-
+	TObjectPtr<UCYAbilitySystemComponent> ASC;
 };

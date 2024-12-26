@@ -3,7 +3,7 @@
 
 #include "UI/CYHpBarUserWidget.h"
 
-#include "AbilitySystemComponent.h"
+#include "AbilitySystem/CYAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/CYAttributeSet.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
@@ -12,11 +12,18 @@ void UCYHpBarUserWidget::SetAbilitySystemComponent(AActor* InOwner)
 {
 	Super::SetAbilitySystemComponent(InOwner);
 
+	SetAbilitySystemComponentByASC(ASC);
+}
+
+void UCYHpBarUserWidget::SetAbilitySystemComponentByASC(UCYAbilitySystemComponent* OwnerASC)
+{
+	Super::SetAbilitySystemComponentByASC(OwnerASC);
+
 	if (ASC)
 	{
 		ASC->GetGameplayAttributeValueChangeDelegate(UCYAttributeSet::GetHealthAttribute()).AddUObject(this, &UCYHpBarUserWidget::OnHealthChanged);
 		ASC->GetGameplayAttributeValueChangeDelegate(UCYAttributeSet::GetMaxHealthAttribute()).AddUObject(this, &UCYHpBarUserWidget::OnMaxHealthChanged);
-		
+
 		PbHpBar->SetFillColorAndOpacity(HealthColor);
 
 		const UCYAttributeSet* CurrentAttributeSet = ASC->GetSet<UCYAttributeSet>();

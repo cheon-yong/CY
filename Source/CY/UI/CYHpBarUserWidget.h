@@ -18,6 +18,8 @@ class CY_API UCYHpBarUserWidget : public UCYUserWidget
 	
 protected:
 	virtual void SetAbilitySystemComponent(AActor* InOwner) override;
+	virtual void SetAbilitySystemComponentByASC(UCYAbilitySystemComponent* OwnerASC) override;
+
 
 	virtual void OnHealthChanged(const FOnAttributeChangeData& ChangeData);
 	virtual void OnMaxHealthChanged(const FOnAttributeChangeData& ChangeData);
