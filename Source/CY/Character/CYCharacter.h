@@ -12,6 +12,7 @@ class AController;
 class UCYAbilitySystemComponent;
 class UCYGameplayAbility;
 class UCYAttributeSet;
+class UCYWidgetComponent;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -50,5 +51,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TArray<TSubclassOf<UCYGameplayAbility>> StartAbilities;
 
+	UPROPERTY(EditAnywhere, Category = UI)
+	TObjectPtr<UCYWidgetComponent> HpBar;
 };
 

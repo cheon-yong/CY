@@ -7,6 +7,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystem/CYAbilitySystemComponent.h"
+#include "UI/CYWidgetComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -15,7 +16,9 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 ACYCharacter::ACYCharacter()
 {
-	
+	HpBar = CreateDefaultSubobject<UCYWidgetComponent>(TEXT("Widget"));
+	HpBar->SetupAttachment(GetMesh());
+	HpBar->SetRelativeLocation(FVector(0.0f, 0.0f, 180.0f));
 }
 
 UAbilitySystemComponent* ACYCharacter::GetAbilitySystemComponent() const
