@@ -14,13 +14,7 @@ void UCYGA_ProjectileAttack::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	ACYCharacter* CYCharacter = CastChecked<ACYCharacter>(ActorInfo->AvatarActor.Get());
-
-	UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), AttackMontage, 1.0f);
-	PlayAttackTask->OnCompleted.AddDynamic(this, &UCYGA_ProjectileAttack::OnCompleteCallback);
-	PlayAttackTask->OnInterrupted.AddDynamic(this, &UCYGA_ProjectileAttack::OnInterruptedCallback);
-
-	PlayAttackTask->ReadyForActivation();
+	
 }
 
 void UCYGA_ProjectileAttack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
