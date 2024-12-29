@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystem/Abilities/CYGameplayAbility.h"
-#include "CYGA_MeleeAttack.generated.h"
+#include "CYGA_AttackWithMonatage.generated.h"
 
 class UGameplayEffect;
 class AnimationMontage;
@@ -13,17 +13,15 @@ class AnimationMontage;
  * 
  */
 UCLASS()
-class CY_API UCYGA_MeleeAttack : public UCYGameplayAbility
+class CY_API UCYGA_AttackWithMonatage : public UCYGameplayAbility
 {
 	GENERATED_BODY()
 	
 public:
-	UCYGA_MeleeAttack();
+	UCYGA_AttackWithMonatage();
 	
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
-	virtual void InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
-	virtual void CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
 	UFUNCTION()
@@ -32,6 +30,7 @@ protected:
 	UFUNCTION()
 	void OnInterruptedCallback();
 
+protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UAnimMontage> AttackMontage;
 };

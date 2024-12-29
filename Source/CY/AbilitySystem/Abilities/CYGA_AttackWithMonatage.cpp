@@ -1,40 +1,30 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AbilitySystem/Abilities/CYGA_MeleeAttack.h"
+#include "AbilitySystem/Abilities/CYGA_AttackWithMonatage.h"
 #include "Character/CYCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 
-UCYGA_MeleeAttack::UCYGA_MeleeAttack()
+UCYGA_AttackWithMonatage::UCYGA_AttackWithMonatage()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 }
 
-void UCYGA_MeleeAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+void UCYGA_AttackWithMonatage::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	ACYCharacter* CYCharacter = CastChecked<ACYCharacter>(ActorInfo->AvatarActor.Get());
 
 	UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), AttackMontage, 1.0f);
-	PlayAttackTask->OnCompleted.AddDynamic(this, &UCYGA_MeleeAttack::OnCompleteCallback);
-	PlayAttackTask->OnInterrupted.AddDynamic(this, &UCYGA_MeleeAttack::OnInterruptedCallback);
+	PlayAttackTask->OnCompleted.AddDynamic(this, &UCYGA_AttackWithMonatage::OnCompleteCallback);
+	PlayAttackTask->OnInterrupted.AddDynamic(this, &UCYGA_AttackWithMonatage::OnInterruptedCallback);
 
 	PlayAttackTask->ReadyForActivation();
 }
 
-void UCYGA_MeleeAttack::InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
-{
-	Super::InputPressed(Handle, ActorInfo, ActivationInfo);
-}
-
-void UCYGA_MeleeAttack::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
-{
-	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
-}
-
-void UCYGA_MeleeAttack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+void UCYGA_AttackWithMonatage::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	ACYCharacter* CYCharacter = CastChecked<ACYCharacter>(ActorInfo->AvatarActor.Get());
 	CYCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
@@ -42,7 +32,7 @@ void UCYGA_MeleeAttack::EndAbility(const FGameplayAbilitySpecHandle Handle, cons
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
-void UCYGA_MeleeAttack::OnCompleteCallback()
+void UCYGA_AttackWithMonatage::OnCompleteCallback()
 {
 	bool bReplicatedEndAbility = true;
 	bool bWasCancelled = false;
@@ -51,7 +41,7 @@ void UCYGA_MeleeAttack::OnCompleteCallback()
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicatedEndAbility, bWasCancelled);
 }
 
-void UCYGA_MeleeAttack::OnInterruptedCallback()
+void UCYGA_AttackWithMonatage::OnInterruptedCallback()
 {
 	bool bReplicatedEndAbility = true;
 	bool bWasCancelled = true;

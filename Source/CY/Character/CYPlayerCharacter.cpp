@@ -10,6 +10,7 @@
 #include "AbilitySystem/CYAbilitySystemComponent.h"
 #include "InputActionValue.h"
 #include "Camera/CameraComponent.h"
+#include "CY.H"
 
 ACYPlayerCharacter::ACYPlayerCharacter()
 {
@@ -61,12 +62,17 @@ void ACYPlayerCharacter::AddCharacterAbilities()
 void ACYPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	CY_LOG(LogCYNetwork, Log, TEXT("%s"), TEXT("BEGIN"));
+	CY_LOG(LogCYNetwork, Log, TEXT("%s"), TEXT("END"));
 }
 
 void ACYPlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
+	CY_LOG(LogCYNetwork, Log, TEXT("%s"), TEXT("BEGIN"));
+	CY_LOG(LogCYNetwork, Log, TEXT("%s"), TEXT("END"));
+	UE_LOG(LogTemp, Log, TEXT("BeginPlay called on %s"), HasAuthority() ? TEXT("Server") : TEXT("Client"));
 	if (ACYPlayerState* CYPS = GetPlayerState<ACYPlayerState>())
 	{
 		ASC = CYPS->GetCYAbilitySystemComponent();
@@ -87,6 +93,8 @@ void ACYPlayerCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 
+	CY_LOG(LogCYNetwork, Log, TEXT("%s"), TEXT("BEGIN"));
+	CY_LOG(LogCYNetwork, Log, TEXT("%s"), TEXT("END"));
 	if (ACYPlayerState* CYPS = GetPlayerState<ACYPlayerState>())
 	{
 		ASC = CYPS->GetCYAbilitySystemComponent();
