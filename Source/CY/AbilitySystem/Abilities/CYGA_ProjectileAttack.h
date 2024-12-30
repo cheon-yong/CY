@@ -3,16 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Abilities/CYGameplayAbility.h"
+#include "AbilitySystem/Abilities/CYGA_AttackWithMonatage.h"
 #include "CYGA_ProjectileAttack.generated.h"
 
+class UCYAnimNotify_AttackHitCheck;
 class ACYProjectile;
 
 /**
  * 
  */
 UCLASS()
-class CY_API UCYGA_ProjectileAttack : public UCYGameplayAbility
+class CY_API UCYGA_ProjectileAttack : public UCYGA_AttackWithMonatage
 {
 	GENERATED_BODY()
 	
@@ -22,12 +23,10 @@ public:
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+	virtual void BindNotify() override;
 
 	UFUNCTION()
-	void OnCompleteCallback();
-
-	UFUNCTION()
-	void OnInterruptedCallback();
+	void OnNotifyBegin();
 
 	UFUNCTION()
 	FVector GetSpawnLocation();
@@ -44,4 +43,6 @@ protected:
 
 	UPROPERTY()
 	FRotator SpawnRotator;
+
+	TObjectPtr<UCYAnimNotify_AttackHitCheck> AnimNotify_HitCheck;
 };

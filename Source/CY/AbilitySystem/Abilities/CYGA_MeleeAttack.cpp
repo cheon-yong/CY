@@ -44,15 +44,9 @@ void UCYGA_MeleeAttack::OnNotifyBegin()
 {
 	if (!CurrentActorInfo->AvatarActor->HasAuthority())
 	{
-		UE_LOG(LogTemp, Log, TEXT("CLIENT"));
 		return;
 	}
-	else
-	{
-		UE_LOG(LogTemp, Log, TEXT("SERVER"));
-	}
 
-	UE_LOG(LogTemp, Log, TEXT("OnNotifyBegin"));
 	UCYAT_Trace* AttackTraceTask = UCYAT_Trace::CreateTask(this, TargetActorClass);
 	AttackTraceTask->OnComplete.AddDynamic(this, &UCYGA_MeleeAttack::OnTraceResultCallback);
 	AttackTraceTask->ReadyForActivation();
