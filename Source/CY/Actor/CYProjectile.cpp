@@ -3,8 +3,10 @@
 
 #include "Actor/CYProjectile.h"
 
+#include "Engine/World.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "TimerManager.h"
 
 // Sets default values
 ACYProjectile::ACYProjectile()
@@ -21,6 +23,22 @@ void ACYProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	FTimerHandle LifeTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(
+		LifeTimerHandle, 
+		this, 
+		&ThisClass::DestroyProjectile,
+		LifeTime, 
+		false
+	);
+}
+
+void ACYProjectile::DestroyProjectile()
+{
+	SMC->SetHiddenInGame(true);
+	PMC->Deactivate();
+
+	Destroy();
 }
 
 // Called every frame

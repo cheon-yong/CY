@@ -17,18 +17,25 @@ public:
 	// Sets default values for this actor's properties
 	ACYProjectile();
 
+	virtual void Tick(float DeltaTime) override;
+
+	TObjectPtr<UStaticMeshComponent> GetStaticMesh() { return SMC; }
+	TObjectPtr<UProjectileMovementComponent> GetProjectileMovement() { return PMC; }
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	virtual void DestroyProjectile();
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Projectile)
+	float LifeTime = 2.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Projectile)
 	TObjectPtr<UStaticMeshComponent> SMC;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrtie)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Projectile)
 	TObjectPtr<UProjectileMovementComponent> PMC;
 };

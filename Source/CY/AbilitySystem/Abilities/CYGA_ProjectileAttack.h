@@ -6,6 +6,8 @@
 #include "AbilitySystem/Abilities/CYGameplayAbility.h"
 #include "CYGA_ProjectileAttack.generated.h"
 
+class ACYProjectile;
+
 /**
  * 
  */
@@ -27,8 +29,19 @@ protected:
 	UFUNCTION()
 	void OnInterruptedCallback();
 
+	UFUNCTION()
+	FVector GetSpawnLocation();
+
+	UFUNCTION()
+	FRotator GetSpawnRotator();
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<UAnimMontage> AttackMontage;
-	
+	TSubclassOf<ACYProjectile> ProjectileClass;
+
+	UPROPERTY()
+	FVector SpawnLocation;
+
+	UPROPERTY()
+	FRotator SpawnRotator;
 };
