@@ -9,6 +9,8 @@
 
 struct FGameplayTag;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNotifiedSignature);
+
 /**
  * 
  */
@@ -23,6 +25,10 @@ public:
 protected:
 	virtual FString GetNotifyName_Implementation() const override;
 	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
+
+public:
+	UPROPERTY(BlueprintAssignable)
+	FOnNotifiedSignature OnNotified;
 
 protected:
 	UPROPERTY(EditAnywhere, Meta = (Categories = Event))

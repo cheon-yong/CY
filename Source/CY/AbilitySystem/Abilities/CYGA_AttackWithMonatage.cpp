@@ -20,6 +20,9 @@ void UCYGA_AttackWithMonatage::ActivateAbility(const FGameplayAbilitySpecHandle 
 	UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), AttackMontage, 1.0f);
 	PlayAttackTask->OnCompleted.AddDynamic(this, &UCYGA_AttackWithMonatage::OnCompleteCallback);
 	PlayAttackTask->OnInterrupted.AddDynamic(this, &UCYGA_AttackWithMonatage::OnInterruptedCallback);
+	
+	// Bind Something
+	BindNotify();
 
 	PlayAttackTask->ReadyForActivation();
 }
@@ -32,11 +35,14 @@ void UCYGA_AttackWithMonatage::EndAbility(const FGameplayAbilitySpecHandle Handl
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
+void UCYGA_AttackWithMonatage::BindNotify()
+{
+}
+
 void UCYGA_AttackWithMonatage::OnCompleteCallback()
 {
 	bool bReplicatedEndAbility = true;
 	bool bWasCancelled = false;
-	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Green, TEXT("Melee Attack End"));
 
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicatedEndAbility, bWasCancelled);
 }
@@ -45,5 +51,6 @@ void UCYGA_AttackWithMonatage::OnInterruptedCallback()
 {
 	bool bReplicatedEndAbility = true;
 	bool bWasCancelled = true;
+
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicatedEndAbility, bWasCancelled);
 }

@@ -14,7 +14,6 @@ FString UCYAnimNotify_AttackHitCheck::GetNotifyName_Implementation() const
 	return TEXT("AttackHitCheck");
 }
 
-UE_DISABLE_OPTIMIZATION
 void UCYAnimNotify_AttackHitCheck::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
 {
 	Super::Notify(MeshComp, Animation, EventReference);
@@ -24,13 +23,13 @@ void UCYAnimNotify_AttackHitCheck::Notify(USkeletalMeshComponent* MeshComp, UAni
 		APawn* OwnerPawn = Cast<APawn>(MeshComp->GetOwner());
 		if (OwnerPawn && OwnerPawn->IsLocallyControlled())
 		{
+			OnNotified.Broadcast();
 			FGameplayEventData PayloadData;
 			PayloadData.Instigator = OwnerPawn;
 			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwnerPawn, TriggerGameplayTag, PayloadData);
 		}
 	}
 }
-UE_ENABLE_OPTIMIZATION
 
 //서버 -> A(서버) B(클라)
 //

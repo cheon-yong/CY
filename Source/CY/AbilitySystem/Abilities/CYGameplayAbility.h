@@ -6,6 +6,9 @@
 #include "Abilities/GameplayAbility.h"
 #include "CYGameplayAbility.generated.h"
 
+class AController;
+class ACYPlayerController;
+class ACYCharacter;
 
 UENUM(BlueprintType)
 enum class ECYAbilityActivationPolicy : uint8
@@ -33,6 +36,15 @@ public:
 	FGameplayTag InputTag;
 
 	ECYAbilityActivationPolicy GetActivationPolicy() const { return ActivationPolicy ; }
+
+	UFUNCTION(BlueprintCallable, Category = "Lyra|Ability")
+	ACYPlayerController* GetCYPlayerControllerFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "CY|Ability")
+	AController* GetControllerFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "CY|Ability")
+	ACYCharacter* GetCYCharacterFromActorInfo() const;
 
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;

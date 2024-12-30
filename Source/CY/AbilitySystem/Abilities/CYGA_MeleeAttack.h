@@ -3,39 +3,36 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Abilities/CYGameplayAbility.h"
-#include "CYGA_AttackWithMonatage.generated.h"
+#include "AbilitySystem/Abilities/CYGA_AttackWithMonatage.h"
+#include "CYGA_MeleeAttack.generated.h"
 
-class UGameplayEffect;
-class AnimationMontage;
-
+class UCYAnimNotify_AttackHitCheck;
+class ACYTA_Trace;
 /**
  * 
  */
 UCLASS()
-class CY_API UCYGA_AttackWithMonatage : public UCYGameplayAbility
+class CY_API UCYGA_MeleeAttack : public UCYGA_AttackWithMonatage
 {
 	GENERATED_BODY()
 	
 public:
-	UCYGA_AttackWithMonatage();
-	
+	UCYGA_MeleeAttack();
+
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
-
-	virtual void BindNotify();
-
-	UFUNCTION()
-	void OnCompleteCallback();
+	virtual void BindNotify() override;
 
 	UFUNCTION()
-	void OnInterruptedCallback();
+	void OnNotifyBegin();
 
+	UFUNCTION()
+	void OnTraceResultCallback(const FGameplayAbilityTargetDataHandle& TargetDataHandle);
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<UAnimMontage> AttackMontage;
+
+	TObjectPtr<UCYAnimNotify_AttackHitCheck> AnimNotify_HitCheck;
 
 	UPROPERTY(EditAnywhere, Category = "GAS")
-	TSubclassOf<UGameplayEffect> AttackDamageEffect;
+	TSubclassOf<ACYTA_Trace> TargetActorClass;
 };

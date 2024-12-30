@@ -126,7 +126,6 @@ void UCYAbilitySystemComponent::Server_AddInputAbilities_Implementation(const TA
 	}
 }
 
-PRAGMA_DISABLE_OPTIMIZATION
 void UCYAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGamePaused)
 {
 	if (HasMatchingGameplayTag(Gameplay_AbilityInputBlocked))
@@ -207,7 +206,6 @@ void UCYAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGameP
 	InputPressedSpecHandles.Reset();
 	InputReleasedSpecHandles.Reset();
 }
-PRAGMA_ENABLE_OPTIMIZATION
 
 void UCYAbilitySystemComponent::ClearAbilityInput()
 {

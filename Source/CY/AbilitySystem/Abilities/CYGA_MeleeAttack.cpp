@@ -1,28 +1,64 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AbilitySystem/Abilities/CYGA_MeleeAttackHitCheck.h"
+#include "AbilitySystem/Abilities/CYGA_MeleeAttack.h"
+#include "Animation/CYAnimNotify_AttackHitCheck.h"
 #include "AbilitySystem/AbilityTask/CYAT_Trace.h"
 #include "AbilitySystem/TargetActor/CYTA_Trace.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/Attributes/CYAttributeSet.h"
 #include "AbilitySystem/CYAbilitySystemComponent.h"
 
-UCYGA_MeleeAttackHitCheck::UCYGA_MeleeAttackHitCheck()
+UCYGA_MeleeAttack::UCYGA_MeleeAttack()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 }
 
-void UCYGA_MeleeAttackHitCheck::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+void UCYGA_MeleeAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+}
 
+void UCYGA_MeleeAttack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+{
+	AnimNotify_HitCheck->OnNotified.RemoveAll(this);
+
+	Super::EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
+}
+void UCYGA_MeleeAttack::BindNotify()
+{
+	const auto NotifyEvents = AttackMontage->Notifies;
+	for (auto NotifyEvent : NotifyEvents)
+	{
+		if (const auto HitCheckNotify = Cast<UCYAnimNotify_AttackHitCheck>(NotifyEvent.Notify))
+		{
+			HitCheckNotify->OnNotified.AddDynamic(this, &ThisClass::OnNotifyBegin);
+			AnimNotify_HitCheck = HitCheckNotify;
+			break;
+		}
+	}
+}
+
+
+void UCYGA_MeleeAttack::OnNotifyBegin()
+{
+	if (!CurrentActorInfo->AvatarActor->HasAuthority())
+	{
+		UE_LOG(LogTemp, Log, TEXT("CLIENT"));
+		return;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("SERVER"));
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("OnNotifyBegin"));
 	UCYAT_Trace* AttackTraceTask = UCYAT_Trace::CreateTask(this, TargetActorClass);
-	AttackTraceTask->OnComplete.AddDynamic(this, &UCYGA_MeleeAttackHitCheck::OnTraceResultCallback);
+	AttackTraceTask->OnComplete.AddDynamic(this, &UCYGA_MeleeAttack::OnTraceResultCallback);
 	AttackTraceTask->ReadyForActivation();
 }
 
-void UCYGA_MeleeAttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTargetDataHandle& TargetDataHandle)
+void UCYGA_MeleeAttack::OnTraceResultCallback(const FGameplayAbilityTargetDataHandle& TargetDataHandle)
 {
 	if (true)
 	{
@@ -55,9 +91,8 @@ void UCYGA_MeleeAttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTarg
 			}
 		}
 	}
-	
 
 	bool bReplicatedEndAbility = true;
 	bool bWasCancelled = false;
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicatedEndAbility, bWasCancelled);
+	//EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicatedEndAbility, bWasCancelled);
 }
