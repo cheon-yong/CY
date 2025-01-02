@@ -14,13 +14,15 @@ public class CY : ModuleRules
 
 		PublicDependencyModuleNames.AddRange(new string[] { 
 			"Core", 
-			"CoreUObject", 
+			"CoreUObject",
+			"NetCore",
 			"Engine", 
 			"InputCore", 
 			"EnhancedInput",
 			"Niagara",
 			"NavigationSystem",
 			"AIModule",
+			"ModularGameplay",
 			"GameFeatures",
 			"GameplayAbilities",
 			"GameplayTasks",

@@ -70,3 +70,68 @@ ACYGameMode::ACYGameMode()
 //	Super::StartPlay();
 //	CY_LOG(LogCYNetwork, Log, TEXT("%s"), TEXT("END"));
 //}
+
+void ACYGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+{
+	Super::InitGame(MapName, Options, ErrorMessage);
+
+}
+
+UClass* ACYGameMode::GetDefaultPawnClassForController_Implementation(AController* InController)
+{
+	return Super::GetDefaultPawnClassForController_Implementation(InController);
+}
+
+APawn* ACYGameMode::SpawnDefaultPawnAtTransform_Implementation(AController* NewPlayer, const FTransform& SpawnTransform)
+{
+	return Super::SpawnDefaultPawnAtTransform_Implementation(NewPlayer, SpawnTransform);
+}
+
+bool ACYGameMode::ShouldSpawnAtStartSpot(AController* Player)
+{
+	return false;
+}
+
+void ACYGameMode::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
+{
+	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
+
+}
+
+AActor* ACYGameMode::ChoosePlayerStart_Implementation(AController* Player)
+{
+	return Super::ChoosePlayerStart_Implementation(Player);
+}
+
+void ACYGameMode::FinishRestartPlayer(AController* NewPlayer, const FRotator& StartRotation)
+{
+	Super::FinishRestartPlayer(NewPlayer, StartRotation);
+}
+
+bool ACYGameMode::PlayerCanRestart_Implementation(APlayerController* Player)
+{
+	return Super::PlayerCanRestart(Player);
+}
+
+void ACYGameMode::InitGameState()
+{
+	Super::InitGameState();
+
+}
+
+bool ACYGameMode::UpdatePlayerStartSpot(AController* Player, const FString& Portal, FString& OutErrorMessage)
+{
+	return true;
+}
+
+void ACYGameMode::GenericPlayerInitialization(AController* NewPlayer)
+{
+	Super::GenericPlayerInitialization(NewPlayer);
+
+	OnGameModePlayerInitialized.Broadcast(this, NewPlayer);
+}
+
+void ACYGameMode::FailedToRestartPlayer(AController* NewPlayer)
+{
+	Super::FailedToRestartPlayer(NewPlayer);
+}
