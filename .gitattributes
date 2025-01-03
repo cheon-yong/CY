@@ -5,3 +5,6 @@ Content/ParagonKwang/FX/Textures/Coords/T_Turbulence_AdditiveWarp_Linear.uasset 
 Content/ParagonKwang/FX/Textures/Energy/Plasma/T_Plasma_Wisps.uasset filter=lfs diff=lfs merge=lfs -text
 Content/ParagonKwang/FX/Textures/Smoke/T_dust_burst_01.uasset filter=lfs diff=lfs merge=lfs -text
 Content/InfinityBladeIceLands/Maps/FrozenCove.umap filter=lfs diff=lfs merge=lfs -text
+lfs/objects/01/07/0107d6a56b22f910769dff27ce051bbae8021842360beeaf0f6561d8265b4a14 filter=lfs diff=lfs merge=lfs -text
+lfs/objects/53/e9/53e9fa3c613b299ba21af67b38b216c2f5bf7e2fc7b78529595720d593ae25a5 filter=lfs diff=lfs merge=lfs -text
+lfs/objects/ea/30/ea30bb401293c7487ee4a81349d04fbf9a3cc4ac81ec2b8d4584d11729475072 filter=lfs diff=lfs merge=lfs -text
