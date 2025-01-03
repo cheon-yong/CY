@@ -110,7 +110,7 @@ void ACYGameMode::FinishRestartPlayer(AController* NewPlayer, const FRotator& St
 
 bool ACYGameMode::PlayerCanRestart_Implementation(APlayerController* Player)
 {
-	return Super::PlayerCanRestart(Player);
+	return Super::PlayerCanRestart_Implementation(Player);
 }
 
 void ACYGameMode::InitGameState()

@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "AbilitySystemInterface.h"
+#include "Team/CYTeamAgentInterface.h"
 #include "CYCharacter.generated.h"
 
 class AController;
@@ -20,7 +21,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInitASCDelegate, UCYAbilitySystemComponent*, ASC);
 
 UCLASS(config=Game)
-class ACYCharacter : public ACharacter, public IAbilitySystemInterface
+class ACYCharacter : public ACharacter, public IAbilitySystemInterface, public ICYTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -31,8 +32,17 @@ public:
 	UCYAbilitySystemComponent* GetCYAbilitySystemComponent() const { return ASC; }
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
-
 	virtual void AddCharacterAbilities();
+
+	//~ICYTeamAgentInterface interface
+	virtual void SetGenericTeamId(const FGenericTeamId& NewTeamID) override;
+	virtual FGenericTeamId GetGenericTeamId() const override;
+	virtual FOnCYTeamIndexChangedDelegate* GetOnTeamIndexChangedDelegate() override;
+	//~End of ICYTeamAgentInterface interface
+
+	//~APawn interface
+	virtual void NotifyControllerChanged() override;
+	//~End of APawn interface
 
 protected:
 	// APawn interface
@@ -42,6 +52,16 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void PossessedBy(AController* NewController) override;
+	virtual void UnPossessed() override;
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+private:
+	UFUNCTION()
+	void OnControllerChangedTeam(UObject* TeamAgent, int32 OldTeam, int32 NewTeam);
+
+	UFUNCTION()
+	void OnRep_MyTeamID(FGenericTeamId OldTeamID);
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -59,5 +79,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = UI)
 	TObjectPtr<UCYWidgetComponent> HpBar;
+
+private:
+	UPROPERTY(ReplicatedUsing = OnRep_MyTeamID)
+	FGenericTeamId MyTeamID;
+
+	UPROPERTY()
+	FOnCYTeamIndexChangedDelegate OnTeamChangedDelegate;
 };
 

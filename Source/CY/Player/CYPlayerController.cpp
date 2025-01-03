@@ -118,6 +118,25 @@ void ACYPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 	}
 }
 
+void ACYPlayerController::SetGenericTeamId(const FGenericTeamId& NewTeamID)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Can't change team in player controller. Team Can be changed by PlayerState"));
+}
+
+FGenericTeamId ACYPlayerController::GetGenericTeamId() const
+{
+	if (const ICYTeamAgentInterface* PSWithTeamInterface = Cast<ICYTeamAgentInterface>(PlayerState))
+	{
+		return PSWithTeamInterface->GetGenericTeamId();
+	}
+	return FGenericTeamId::NoTeam;
+}
+
+FOnCYTeamIndexChangedDelegate* ACYPlayerController::GetOnTeamIndexChangedDelegate()
+{
+	return &OnTeamChangedDelegate;
+}
+
 void ACYPlayerController::Move(const FInputActionValue& Value)
 {
 	// input is a Vector2D
@@ -168,4 +187,46 @@ void ACYPlayerController::StopJumping()
 	{
 		ControlledCharacter->StopJumping();
 	}
+}
+
+void ACYPlayerController::OnPlayerStateChanged()
+{
+
+}
+
+void ACYPlayerController::BroadcastOnPlayerStateChanged()
+{
+	OnPlayerStateChanged();
+
+	// Unbind from the old player state, if any
+	FGenericTeamId OldTeamID = FGenericTeamId::NoTeam;
+	if (LastSeenPlayerState != nullptr)
+	{
+		if (ICYTeamAgentInterface* PlayerStateTeamInterface = Cast<ICYTeamAgentInterface>(LastSeenPlayerState))
+		{
+			OldTeamID = PlayerStateTeamInterface->GetGenericTeamId();
+			PlayerStateTeamInterface->GetTeamChangedDelegateChecked().RemoveAll(this);
+		}
+	}
+
+	// Bind to the new player state, if any
+	FGenericTeamId NewTeamID = FGenericTeamId::NoTeam;
+	if (PlayerState != nullptr)
+	{
+		if (ICYTeamAgentInterface* PlayerStateTeamInterface = Cast<ICYTeamAgentInterface>(PlayerState))
+		{
+			NewTeamID = PlayerStateTeamInterface->GetGenericTeamId();
+			PlayerStateTeamInterface->GetTeamChangedDelegateChecked().AddDynamic(this, &ThisClass::OnPlayerStateChangedTeam);
+		}
+	}
+
+	// Broadcast the team change (if it really has)
+	ConditionalBroadcastTeamChanged(this, OldTeamID, NewTeamID);
+
+	LastSeenPlayerState = PlayerState;
+}
+
+void ACYPlayerController::OnPlayerStateChangedTeam(UObject* TeamAgent, int32 OldTeam, int32 NewTeam)
+{
+	ConditionalBroadcastTeamChanged(this, IntegerToGenericTeamId(OldTeam), IntegerToGenericTeamId(NewTeam));
 }

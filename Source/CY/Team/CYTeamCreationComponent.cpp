@@ -40,6 +40,20 @@ void UCYTeamCreationComponent::BeginPlay()
 	ULyraExperienceManagerComponent* ExperienceComponent = GameState->FindComponentByClass<ULyraExperienceManagerComponent>();
 	check(ExperienceComponent);
 	ExperienceComponent->CallOrRegister_OnExperienceLoaded_HighPriority(FOnLyraExperienceLoaded::FDelegate::CreateUObject(this, &ThisClass::OnExperienceLoaded));*/
+
+	if (AGameStateBase* GameState = GetGameStateChecked<AGameStateBase>())
+	{
+		InitComponent();
+	}
+}
+
+void UCYTeamCreationComponent::InitComponent()
+{
+	if (HasAuthority())
+	{
+		ServerCreateTeams();
+		ServerAssignPlayersToTeams();
+	}
 }
 
 //void UCYTeamCreationComponent::OnExperienceLoaded(const ULyraExperienceDefinition* Experience)

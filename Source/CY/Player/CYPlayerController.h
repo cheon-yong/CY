@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Team/CYTeamAgentInterface.h"
+
 #include "CYPlayerController.generated.h"
 
 class UInputMappingContext;
@@ -17,7 +19,7 @@ struct FGameplayTag;
  * 
  */
 UCLASS()
-class CY_API ACYPlayerController : public APlayerController
+class CY_API ACYPlayerController : public APlayerController, public ICYTeamAgentInterface
 {
 	GENERATED_BODY()
 	
@@ -42,12 +44,27 @@ public:
 	void AbilityInputTagPressed(FGameplayTag InputTag);
 	void AbilityInputTagReleased(FGameplayTag InputTag);
 
+	//~ICYTeamAgentInterface interface
+	virtual void SetGenericTeamId(const FGenericTeamId& NewTeamID) override;
+	virtual FGenericTeamId GetGenericTeamId() const override;
+	virtual FOnCYTeamIndexChangedDelegate* GetOnTeamIndexChangedDelegate() override;
+	//~End of ICYTeamAgentInterface interface
+
+
 protected:
 	// About Default Input
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Jump();
 	void StopJumping();
+
+	virtual void OnPlayerStateChanged();
+
+private:
+	UPROPERTY()
+	FOnCYTeamIndexChangedDelegate OnTeamChangedDelegate;
+
+	void BroadcastOnPlayerStateChanged();
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = GAS, meta = (AllowPrivateAccess = "true"))
@@ -68,4 +85,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> JumpAction;
 
+private:
+	UFUNCTION()
+	void OnPlayerStateChangedTeam(UObject* TeamAgent, int32 OldTeam, int32 NewTeam);
+
+private:
+	UPROPERTY()
+	TObjectPtr<APlayerState> LastSeenPlayerState;
 };

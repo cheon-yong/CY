@@ -30,6 +30,7 @@ public:
 
 	//~UActorComponent interface
 	virtual void BeginPlay() override;
+	void InitComponent();
 	//~End of UActorComponent interface
 
 private:
