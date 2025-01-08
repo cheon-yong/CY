@@ -35,6 +35,7 @@ public:
 	void StartSession();
 	void DestroySession();
 
+	virtual void Deinitialize() override;
 
 	//-------------------------------------------------------------
 	// Our own custom delegate for the Menu class to bind callbacks

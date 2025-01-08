@@ -134,6 +134,11 @@ void UCYMultiPlayerSubsystem::DestroySession()
 	}
 }
 
+void UCYMultiPlayerSubsystem::Deinitialize()
+{
+	SessionInterface = nullptr;
+}
+
 void UCYMultiPlayerSubsystem::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
 {
 	if (SessionInterface)

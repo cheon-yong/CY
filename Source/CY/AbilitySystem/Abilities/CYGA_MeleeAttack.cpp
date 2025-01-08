@@ -8,6 +8,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/Attributes/CYAttributeSet.h"
 #include "AbilitySystem/CYAbilitySystemComponent.h"
+#include "Team/CYTeamSubsystem.h"
 
 UCYGA_MeleeAttack::UCYGA_MeleeAttack()
 {
@@ -66,6 +67,17 @@ void UCYGA_MeleeAttack::OnTraceResultCallback(const FGameplayAbilityTargetDataHa
 			{
 				UE_LOG(LogTemp, Error, TEXT("ASC not found!"));
 				return;
+			}
+
+			if (UCYTeamSubsystem* TeamSubsystem = GetWorld()->GetSubsystem<UCYTeamSubsystem>())
+			{
+
+				UObject* SourceCharacter = Cast<UObject>(GetActorInfo().AvatarActor);;
+				UObject* TargetCharacter = Cast<UObject>(HitResult.GetActor());
+				ECYTeamComparison IsSameTeam = TeamSubsystem->CompareTeams(SourceCharacter, TargetCharacter);
+
+				if (IsSameTeam == ECYTeamComparison::OnSameTeam)
+					return;
 			}
 
 			const UCYAttributeSet* SourceAttribute = SourceASC->GetSet<UCYAttributeSet>();

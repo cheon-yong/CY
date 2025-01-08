@@ -28,6 +28,8 @@ public class CYOnlineSubsystem : ModuleRules
 				"Core",
 				"OnlineSubsystem",
 				"OnlineSubsystemSteam",
+				"OnlineSubsystemNull",
+				"OnlineSubsystemUtils",
 				"UMG",
 				"Slate",
 				"SlateCore"
