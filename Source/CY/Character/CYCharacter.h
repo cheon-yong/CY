@@ -36,6 +36,8 @@ public:
 
 	//~ICYTeamAgentInterface interface
 	virtual void SetGenericTeamId(const FGenericTeamId& NewTeamID) override;
+
+	UFUNCTION(BlueprintCallable, Category = "Team")
 	virtual FGenericTeamId GetGenericTeamId() const override;
 	virtual FOnCYTeamIndexChangedDelegate* GetOnTeamIndexChangedDelegate() override;
 	//~End of ICYTeamAgentInterface interface

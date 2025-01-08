@@ -30,15 +30,18 @@ public:
 	virtual void PostNetInit() override;
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
-	virtual void OnPossess(APawn* InPawn) override;
 	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
 
 	UFUNCTION(BlueprintCallable, Category = "CY|PlayerController")
 	UCYAbilitySystemComponent* GetCYAbilitySystemComponent() const;
 
-	/*virtual void InitPlayerState() override;
-	virtual void CleanupPlayerState() override;*/
+	// AController Interface
+	virtual void OnPossess(APawn* InPawn) override;
+	virtual void InitPlayerState() override;
+	virtual void CleanupPlayerState() override;
 	virtual void OnRep_PlayerState() override;
+	//~End of AController interface
+
 
 	// About Ability Input
 	void AbilityInputTagPressed(FGameplayTag InputTag);

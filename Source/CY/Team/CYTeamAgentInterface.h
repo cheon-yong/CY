@@ -17,10 +17,12 @@ inline int32 GenericTeamIdToInteger(FGenericTeamId ID)
 	return (ID == FGenericTeamId::NoTeam) ? INDEX_NONE : (int32)ID;
 }
 
+UE_DISABLE_OPTIMIZATION
 inline FGenericTeamId IntegerToGenericTeamId(int32 ID)
 {
 	return (ID == INDEX_NONE) ? FGenericTeamId::NoTeam : FGenericTeamId((uint8)ID);
 }
+UE_ENABLE_OPTIMIZATION
 
 /** Interface for actors which can be associated with teams */
 UINTERFACE(meta=(CannotImplementInterfaceInBlueprint))

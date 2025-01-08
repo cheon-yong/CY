@@ -28,8 +28,12 @@ public class CY : ModuleRules
 			"GameplayTasks",
 			"GameplayTags",
 			"UMG",
+
+			// Online Subsystem
 			"OnlineSubsystem",
 			"OnlineSubsystemSteam",
+			"OnlineSubsystemNull",
+			"OnlineSubsystemUtils",
 		});
 	}
 }

@@ -81,22 +81,29 @@ UCYAbilitySystemComponent* ACYPlayerController::GetCYAbilitySystemComponent() co
 	return ASC;
 }
 
-//void ACYPlayerController::InitPlayerState()
-//{
-//	Super::InitPlayerState();
-//}
-//
-//void ACYPlayerController::CleanupPlayerState()
-//{
-//	Super::CleanupPlayerState();
-//}
-//
+void ACYPlayerController::InitPlayerState()
+{
+	Super::InitPlayerState();
+
+	BroadcastOnPlayerStateChanged();
+
+}
+
+void ACYPlayerController::CleanupPlayerState()
+{
+	Super::CleanupPlayerState();
+
+	BroadcastOnPlayerStateChanged();
+}
+
 void ACYPlayerController::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 
 	ACYPlayerState* GS = GetPlayerState<ACYPlayerState>();
 	ASC = GetPlayerState<ACYPlayerState>()->GetCYAbilitySystemComponent();
+
+	BroadcastOnPlayerStateChanged();
 }
 
 

@@ -20,6 +20,8 @@ ACYCharacter::ACYCharacter()
 	HpBar = CreateDefaultSubobject<UCYWidgetComponent>(TEXT("Widget"));
 	HpBar->SetupAttachment(GetMesh());
 	HpBar->SetRelativeLocation(FVector(0.0f, 0.0f, 180.0f));
+
+	//GetMesh()->SetIsReplicated(true);
 }
 
 UAbilitySystemComponent* ACYCharacter::GetAbilitySystemComponent() const
@@ -67,6 +69,8 @@ void ACYCharacter::UnPossessed()
 void ACYCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ThisClass, MyTeamID)
 }
 
 void ACYCharacter::OnControllerChangedTeam(UObject* TeamAgent, int32 OldTeam, int32 NewTeam)

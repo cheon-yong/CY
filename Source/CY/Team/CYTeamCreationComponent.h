@@ -50,6 +50,7 @@ protected:
 #if WITH_SERVER_CODE
 protected:
 	virtual void ServerCreateTeams();
+
 	virtual void ServerAssignPlayersToTeams();
 
 	/** Sets the team ID for the given player state. Spectator-only player states will be stripped of any team association. */
