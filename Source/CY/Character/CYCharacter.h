@@ -14,6 +14,7 @@ class UCYAbilitySystemComponent;
 class UCYGameplayAbility;
 class UCYAttributeSet;
 class UCYWidgetComponent;
+class UCYInventoryComponent;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -81,6 +82,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = UI)
 	TObjectPtr<UCYWidgetComponent> HpBar;
+
+	UPROPERTY(EditAnywhere, Replicated)
+	TObjectPtr<UCYInventoryComponent> InventoryComponent;
 
 private:
 	UPROPERTY(ReplicatedUsing = OnRep_MyTeamID)

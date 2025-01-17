@@ -23,7 +23,7 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	TSubclassOf<UCYItemDefinition> GetItemDefinition() const;
+	const UCYItemDefinition* GetItemDefinition() const;
 
 private:
 	UPROPERTY(Replicated)

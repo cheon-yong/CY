@@ -9,6 +9,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Inventory/CYItemInstance.h"
+#include "Inventory/CYItemDefinition.h"
 
 // Sets default values
 ACYItemActor::ACYItemActor()
@@ -30,11 +31,68 @@ void ACYItemActor::Init(UCYItemInstance* InItemInstance)
 	ItemInstance = InItemInstance;
 }
 
+void ACYItemActor::OnDropped()
+{
+	ItemState = EItemState::Dropped;
+
+	if (AActor* ActorOwner = GetOwner())
+	{
+		const FVector Location = GetActorLocation();
+		const FVector Forward = ActorOwner->GetActorForwardVector();
+
+		const float droppedItemDist = 100.f;
+		const float droppedItemTraceDist = 100.f;
+
+		const FVector TraceStart = Location + Forward * droppedItemDist;
+		const FVector TraceEnd = TraceStart - FVector::UpVector * droppedItemTraceDist;
+
+		TArray<AActor*> ActorsToIgnore = { GetOwner() };
+
+		FHitResult TraceHit;
+
+		static const auto CVar = IConsoleManager::Get().FindConsoleVariable(TEXT("ShowDebugInventory"));
+		const bool bShowInventory = CVar->GetInt() > 0;
+
+		FVector TargetLocation = TraceEnd;
+
+		EDrawDebugTrace::Type DebugDrawType = bShowInventory ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None;
+
+		if (UKismetSystemLibrary::LineTraceSingleByProfile(this, TraceStart, TraceEnd, TEXT("WorldStatic"),
+			true, ActorsToIgnore, DebugDrawType, TraceHit, true))
+		{
+			if (TraceHit.bBlockingHit)
+			{
+				TargetLocation = TraceHit.Location;
+			}
+		}
+
+		SetActorLocation(TargetLocation);
+
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		SphereComponent->SetGenerateOverlapEvents(true);
+	}
+}
+
+void ACYItemActor::OnUse()
+{
+}
+
 // Called when the game starts or when spawned
 void ACYItemActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (HasAuthority())
+	{
+		if (!(IsValid(ItemInstance)) && IsValid(ItemDefinitionClass))
+		{
+			ItemInstance = NewObject<UCYItemInstance>();
+			ItemInstance->Init(ItemDefinitionClass);
+
+			SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+			SphereComponent->SetGenerateOverlapEvents(true);
+		}
+	}
 }
 
 void ACYItemActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

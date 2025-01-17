@@ -22,7 +22,11 @@ void UCYItemInstance::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME(UCYItemInstance, ItemDefinitionClass);
 }
 
-TSubclassOf<UCYItemDefinition> UCYItemInstance::GetItemDefinition() const
+const UCYItemDefinition* UCYItemInstance::GetItemDefinition() const
 {
-	return ItemDefinitionClass;
+	if (IsValid(ItemDefinitionClass))
+	{
+		return GetDefault<UCYItemDefinition>(ItemDefinitionClass);
+	}
+	return nullptr;
 }

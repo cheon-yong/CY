@@ -37,7 +37,6 @@ public:
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Display, Instanced)
 	TArray<TObjectPtr<UCYItemFragment>> Fragments;
-	
 };
 
 

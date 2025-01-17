@@ -49,7 +49,12 @@ struct FCYInventoryList : public FFastArraySerializer
 	{
 	}
 
-	TArray<UCYItemInstance*> GetAllItems() const;
+	void AddItem(TSubclassOf<UCYItemDefinition> InItemDefinitionClass);
+	void AddItem(UCYItemInstance* InItemInstance);
+	void RemoveItem(UCYItemInstance* InItemInstance);
+	TArray<FCYInventoryEntry> GetItemList() { return Entries; }
+
+	TArray<UCYItemInstance*> GetAllItemInstances() const;
 
 private:
 	// Replicated list of items
@@ -71,17 +76,28 @@ public:
 	// Sets default values for this component's properties
 	UCYInventoryComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void InitializeComponent() override;
+	virtual bool ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
 
+	UFUNCTION(BlueprintCallable)
+	void AddItem(TSubclassOf<UCYItemDefinition> InItemDefinitionClass);
+
+	UFUNCTION(BlueprintCallable)
+	void AddItemInstance(UCYItemInstance* InItemInstance);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveItem(UCYItemInstance* InItemInstance);
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	UPROPERTY(EditDefaultsOnly)
+	TArray<TSubclassOf<UCYItemDefinition>> DefaultItems;
 
 private:
 	UPROPERTY(Replicated)

@@ -8,6 +8,7 @@
 
 class StaticMeshComponent;
 class UCYItemInstance;
+class UCYItemDefinition;
 class USphereComponent;
 
 UENUM(BlueprintType)
@@ -28,7 +29,10 @@ public:
 	// Sets default values for this actor's properties
 	ACYItemActor();
 
-	void Init(UCYItemInstance* InItemInstance);
+	virtual void Init(UCYItemInstance* InItemInstance);
+
+	virtual void OnDropped();
+	virtual void OnUse();
 
 protected:
 	// Called when the game starts or when spawned
@@ -39,13 +43,19 @@ protected:
 	UFUNCTION()
 	void OnRep_ItemState();
 
-private:
+protected:
+	UPROPERTY(EditAnywhere, Replicated)
 	TObjectPtr<UStaticMeshComponent> StaticMeshComponent = nullptr;
 
 	UPROPERTY(ReplicatedUsing = OnRep_ItemState)
 	TEnumAsByte<EItemState> ItemState = EItemState::None;
 
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<USphereComponent> SphereComponent = nullptr;
 
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCYItemInstance> ItemInstance;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UCYItemDefinition> ItemDefinitionClass;
 };

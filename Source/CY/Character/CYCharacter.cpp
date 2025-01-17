@@ -9,6 +9,7 @@
 #include "AbilitySystem/CYAbilitySystemComponent.h"
 #include "UI/CYWidgetComponent.h"
 #include "Net/UnrealNetwork.h"
+#include "Inventory/CYInventoryComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -20,6 +21,9 @@ ACYCharacter::ACYCharacter()
 	HpBar = CreateDefaultSubobject<UCYWidgetComponent>(TEXT("Widget"));
 	HpBar->SetupAttachment(GetMesh());
 	HpBar->SetRelativeLocation(FVector(0.0f, 0.0f, 180.0f));
+
+	InventoryComponent = CreateDefaultSubobject<UCYInventoryComponent>(TEXT("InventoryComponent"));
+	InventoryComponent->SetIsReplicated(true);
 
 	//GetMesh()->SetIsReplicated(true);
 }
@@ -70,7 +74,8 @@ void ACYCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(ThisClass, MyTeamID)
+	DOREPLIFETIME(ThisClass, MyTeamID);
+	DOREPLIFETIME(ThisClass, InventoryComponent);
 }
 
 void ACYCharacter::OnControllerChangedTeam(UObject* TeamAgent, int32 OldTeam, int32 NewTeam)
