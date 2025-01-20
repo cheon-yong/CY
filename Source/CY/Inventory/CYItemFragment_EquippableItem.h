@@ -6,7 +6,7 @@
 #include "Inventory/CYItemDefinition.h"
 #include "CYItemFragment_EquippableItem.generated.h"
 
-class UCYEquipmentDefinition;
+class ACYItemActor;
 
 /**
  * 
@@ -17,6 +17,9 @@ class CY_API UCYItemFragment_EquippableItem : public UCYItemFragment
 	GENERATED_BODY()
 	
 public:
-	/*UPROPERTY(EditAnywhere, Category = CY)
-	TSubclassOf<UCYEquipmentDefinition> EquipmentDefinition;*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = CY)
+	FName SocketName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = CY)
+	TSubclassOf<ACYItemActor> ItemActor;
 };
