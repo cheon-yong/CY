@@ -37,7 +37,7 @@ public:
 
 	ECYAbilityActivationPolicy GetActivationPolicy() const { return ActivationPolicy ; }
 
-	UFUNCTION(BlueprintCallable, Category = "Lyra|Ability")
+	UFUNCTION(BlueprintCallable, Category = "CY|Ability")
 	ACYPlayerController* GetCYPlayerControllerFromActorInfo() const;
 
 	UFUNCTION(BlueprintCallable, Category = "CY|Ability")
