@@ -27,7 +27,11 @@ public class CY : ModuleRules
 			"GameplayAbilities",
 			"GameplayTasks",
 			"GameplayTags",
+
+			// UI
 			"UMG",
+			"Slate",
+			"SlateCore",
 
 			// Online Subsystem
 			"OnlineSubsystem",
