@@ -6,6 +6,8 @@
 #include "UI/CYUserWidget.h"
 #include "CYInventoryWidget.generated.h"
 
+class UCYItemInstance;
+
 /**
  * 
  */
@@ -18,8 +20,12 @@ public:
 	UCYInventoryWidget();
 
 	UFUNCTION(BlueprintCallable)
-	void GetItems();
+	void GetItemsFromInventoryComponent();
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void MakeItemSlots();
+	
 protected:
-
+	UPROPERTY(BlueprintReadOnly)
+	TArray<UCYItemInstance*> ItemInstances;
 };

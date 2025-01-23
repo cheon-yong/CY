@@ -91,6 +91,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void RemoveItem(UCYItemInstance* InItemInstance);
 
+	UFUNCTION(BlueprintCallable)
+	TArray<UCYItemInstance*> GetAllItemInstances() const { return InventoryList.GetAllItemInstances(); }
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

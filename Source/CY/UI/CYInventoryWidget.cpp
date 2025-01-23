@@ -2,11 +2,22 @@
 
 
 #include "UI/CYInventoryWidget.h"
+#include "GameFramework/PlayerController.h"
+#include "Character/CYCharacter.h"
+#include "Inventory/CYInventoryComponent.h"
+#include "Inventory/CYItemInstance.h"
 
 UCYInventoryWidget::UCYInventoryWidget()
 {
 }
 
-void UCYInventoryWidget::GetItems()
+void UCYInventoryWidget::GetItemsFromInventoryComponent()
 {
+	if (ACYCharacter* PlayerPawn = GetOwningPlayerPawn<ACYCharacter>())
+	{
+		if (UCYInventoryComponent* Inventory = PlayerPawn->GetComponentByClass<UCYInventoryComponent>())
+		{
+			ItemInstances = Inventory->GetAllItemInstances();
+		}
+	}
 }

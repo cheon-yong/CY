@@ -19,8 +19,5 @@ class CY_API UCYItemFragment_ItemInfo : public UCYItemFragment
 	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Appearance)
-	FName ItemName;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Appearance)
 	FSlateBrush IconBrush;
 };
