@@ -6,6 +6,7 @@
 #include "Inventory/CYItemDefinition.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
+#include "Inventory/CYItemFragment_EquippableItem.h"
 
 UCYItemInstance::UCYItemInstance()
 {

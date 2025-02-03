@@ -8,6 +8,7 @@
 
 class UCYItemFragment;
 class UCYItemDefinition;
+struct FCYEquipmentActorToSpawn;
 /**
  * 
  */

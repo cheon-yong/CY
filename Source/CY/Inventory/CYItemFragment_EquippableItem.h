@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
 #include "Inventory/CYItemDefinition.h"
+#include "Actor/CYItemActor.h"
+
 #include "CYItemFragment_EquippableItem.generated.h"
 
 class ACYItemActor;
