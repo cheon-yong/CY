@@ -8,6 +8,24 @@
 
 class ACYItemActor;
 
+USTRUCT(BlueprintType)
+struct FCYEquipmentActorToSpawn
+{
+	GENERATED_BODY()
+
+	FCYEquipmentActorToSpawn()
+	{}
+
+	UPROPERTY(EditAnywhere, Category = Equipment)
+	TSubclassOf<ACYItemActor> ActorToSpawn;
+
+	UPROPERTY(EditAnywhere, Category = Equipment)
+	FName AttachSocket;
+
+	UPROPERTY(EditAnywhere, Category = Equipment)
+	FTransform AttachTransform;
+};
+
 /**
  * 
  */
@@ -17,9 +35,6 @@ class CY_API UCYItemFragment_EquippableItem : public UCYItemFragment
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = CY)
-	FName SocketName;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = CY)
-	TSubclassOf<ACYItemActor> ItemActor;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Equipment)
+	TArray<FCYEquipmentActorToSpawn> ActorsToSpawn;
 };

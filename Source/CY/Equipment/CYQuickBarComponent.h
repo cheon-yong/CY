@@ -23,13 +23,13 @@ public:
 
 	virtual void BeginPlay() override;
 
-	UFUNCTION(BlueprintCallable, Category = "Lyra")
+	UFUNCTION(BlueprintCallable, Category = "CY")
 	void CycleActiveSlotForward();
 
-	UFUNCTION(BlueprintCallable, Category = "Lyra")
+	UFUNCTION(BlueprintCallable, Category = "CY")
 	void CycleActiveSlotBackward();
 
-	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Lyra")
+	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "CY")
 	void SetActiveSlotIndex(int32 NewIndex);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure = false)

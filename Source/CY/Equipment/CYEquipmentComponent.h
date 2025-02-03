@@ -100,6 +100,9 @@ public:
 	UCYItemInstance* EquipItem(TSubclassOf<UCYItemDefinition> InItemDefinition);
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly)
+	UCYItemInstance* EquipItemInstance(UCYItemInstance* InItemInstance);
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly)
 	void UnequipItem(UCYItemInstance* ItemInstance);
 
 	//~UObject interface

@@ -87,17 +87,12 @@ void UCYQuickBarComponent::EquipItemInSlot()
 		{
 			if (UCYEquipmentComponent* EquipmentManager = FindEquipmentManager())
 			{
-				//EquippedItem = EquipmentManager->EquipItem(EquipDef);
-				/*if (EquippedItem != nullptr)
+				EquippedItem = EquipmentManager->EquipItemInstance(SlotItem);
+				if (EquippedItem != nullptr)
 				{
 					EquippedItem->SetInstigator(SlotItem);
-				}*/
+				}
 			}
-			/*TSubclassOf<ULyraEquipmentDefinition> EquipDef = EquipInfo->EquipmentDefinition;
-			if (EquipDef != nullptr)
-			{
-				
-			}*/
 		}
 	}
 }

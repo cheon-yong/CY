@@ -98,7 +98,7 @@ UCYItemInstance* FCYEquipmentList::AddEntry(UCYItemInstance* InItemInstance)
 	check(OwnerComponent);
 	check(OwnerComponent->GetOwner()->HasAuthority());
 
-	const UCYItemDefinition* ItemDef = InItemInstance->GetItemDefinition();
+	TSubclassOf<UCYItemDefinition> ItemDef = InItemInstance->GetItemDefinitionClass();
 
 	FCYAppliedEquipmentEntry& NewEntry = Entries.AddDefaulted_GetRef();
 	NewEntry.EquipmentDefinition = ItemDef;
@@ -188,6 +188,26 @@ UCYItemInstance* UCYEquipmentComponent::EquipItem(TSubclassOf<UCYItemDefinition>
 			}
 		}
 	}
+	return Result;
+}
+
+UCYItemInstance* UCYEquipmentComponent::EquipItemInstance(UCYItemInstance* InItemInstance)
+{
+	UCYItemInstance* Result = nullptr;
+	if (InItemInstance != nullptr)
+	{
+		Result = EquipmentList.AddEntry(InItemInstance);
+		if (Result != nullptr)
+		{
+			Result->OnEquipped();
+
+			if (IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+			{
+				AddReplicatedSubObject(Result);
+			}
+		}
+	}
+
 	return Result;
 }
 
