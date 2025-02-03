@@ -30,3 +30,21 @@ const UCYItemDefinition* UCYItemInstance::GetItemDefinition() const
 	}
 	return nullptr;
 }
+
+const UCYItemFragment* UCYItemInstance::FindFragmentByClass(TSubclassOf<UCYItemFragment> FragmentClass) const
+{
+	if ((ItemDefinitionClass != nullptr) && (FragmentClass != nullptr))
+	{
+		return GetDefault<UCYItemDefinition>(ItemDefinitionClass)->FindFragmentByClass(FragmentClass);
+	}
+
+	return nullptr;
+}
+
+void UCYItemInstance::OnEquipped()
+{
+}
+
+void UCYItemInstance::OnUnequipped()
+{
+}

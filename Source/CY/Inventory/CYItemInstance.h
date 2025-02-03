@@ -6,6 +6,7 @@
 #include "UObject/NoExportTypes.h"
 #include "CYItemInstance.generated.h"
 
+class UCYItemFragment;
 class UCYItemDefinition;
 /**
  * 
@@ -24,6 +25,18 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	const UCYItemDefinition* GetItemDefinition() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure = false, meta = (DeterminesOutputType = FragmentClass))
+	const UCYItemFragment* FindFragmentByClass(TSubclassOf<UCYItemFragment> FragmentClass) const;
+
+	template <typename ResultClass>
+	const ResultClass* FindFragmentByClass() const
+	{
+		return (ResultClass*)FindFragmentByClass(ResultClass::StaticClass());
+	}
+
+	virtual void OnEquipped();
+	virtual void OnUnequipped();
 
 private:
 	UPROPERTY(Replicated)
