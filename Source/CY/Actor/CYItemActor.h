@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "CYItemActor.generated.h"
 
-class StaticMeshComponent;
+class USkeletalMeshComponent;
 class UCYItemInstance;
 class UCYItemDefinition;
 class USphereComponent;
@@ -20,7 +20,7 @@ enum EItemState : uint8
 	MAX			UMETA(DisplayName = "MAX")
 };
 
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class CY_API ACYItemActor : public AActor
 {
 	GENERATED_BODY()
@@ -44,18 +44,18 @@ protected:
 	void OnRep_ItemState();
 
 protected:
-	UPROPERTY(EditAnywhere, Replicated)
-	TObjectPtr<UStaticMeshComponent> StaticMeshComponent = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Replicated)
+	TObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent = nullptr;
 
 	UPROPERTY(ReplicatedUsing = OnRep_ItemState)
 	TEnumAsByte<EItemState> ItemState = EItemState::None;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<USphereComponent> SphereComponent = nullptr;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Replicated)
 	TObjectPtr<UCYItemInstance> ItemInstance;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UCYItemDefinition> ItemDefinitionClass;
 };

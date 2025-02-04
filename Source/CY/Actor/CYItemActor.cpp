@@ -7,7 +7,7 @@
 #include "Engine/ActorChannel.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Components/SphereComponent.h"
-#include "Components/StaticMeshComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Inventory/CYItemInstance.h"
 #include "Inventory/CYItemDefinition.h"
 
@@ -22,8 +22,8 @@ ACYItemActor::ACYItemActor()
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	SphereComponent->SetupAttachment(RootComponent);
 
-	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
-	StaticMeshComponent->SetupAttachment(RootComponent);
+	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
+	SkeletalMeshComponent->SetupAttachment(RootComponent);
 }
 
 void ACYItemActor::Init(UCYItemInstance* InItemInstance)
@@ -101,7 +101,7 @@ void ACYItemActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 
 	DOREPLIFETIME(ThisClass, ItemInstance);
 	DOREPLIFETIME(ThisClass, ItemState);
-
+	DOREPLIFETIME(ThisClass, SkeletalMeshComponent);
 }
 
 void ACYItemActor::OnRep_ItemState()
