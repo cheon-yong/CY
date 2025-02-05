@@ -9,67 +9,12 @@
 #include "Engine/ActorChannel.h"
 
 //////////////////////////////////////////////////////////////////////
-// FCYInventoryEntry
-
-FString FCYInventoryEntry::GetDebugString() const
-{
-	return FString();
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// FCYInventoryList
-
-void FCYInventoryList::AddItem(TSubclassOf<UCYItemDefinition> InItemDefinitionClass)
-{
-	FCYInventoryEntry& Item = Entries.AddDefaulted_GetRef();
-	Item.Instance = NewObject<UCYItemInstance>();
-	Item.Instance->Init(InItemDefinitionClass);
-	MarkItemDirty(Item);
-}
-
-void FCYInventoryList::AddItem(UCYItemInstance* InItemInstance)
-{
-	FCYInventoryEntry& Item = Entries.AddDefaulted_GetRef();
-	Item.Instance = InItemInstance;
-	MarkItemDirty(Item);
-}
-
-void FCYInventoryList::RemoveItem(UCYItemInstance* InItemInstance)
-{
-	for (auto EntryIt = Entries.CreateIterator(); EntryIt; ++EntryIt)
-	{
-		FCYInventoryEntry& Entry = *EntryIt;
-		if (Entry.Instance == InItemInstance)
-		{
-			EntryIt.RemoveCurrent();
-			MarkArrayDirty();
-		}
-	}	
-}
-
-TArray<UCYItemInstance*> FCYInventoryList::GetAllItemInstances() const
-{
-	TArray<UCYItemInstance*> Results;
-	Results.Reserve(Entries.Num());
-	for (const FCYInventoryEntry& Entry : Entries)
-	{
-		if (Entry.Instance != nullptr) //@TODO: Would prefer to not deal with this here and hide it further?
-		{
-			Results.Add(Entry.Instance);
-		}
-	}
-	return Results;
-}
-
-
-//////////////////////////////////////////////////////////////////////
 // FCYInventoryComponent
 
 // Sets default values for this component's properties
 UCYInventoryComponent::UCYInventoryComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
-	, InventoryList(this)
+	, InventoryList(this, MaxItemCount)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -77,6 +22,7 @@ UCYInventoryComponent::UCYInventoryComponent(const FObjectInitializer& ObjectIni
 	bWantsInitializeComponent = true;
 	SetIsReplicatedByDefault(true);
 
+	
 	// ...
 }
 
@@ -97,11 +43,15 @@ void UCYInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+
 	if (InventoryList.GetItemList().Num() > 0)
 	{
-		for (FCYInventoryEntry& Item : InventoryList.GetItemList())
+		for (FCYItemEntry& Item : InventoryList.GetItemList())
 		{
 			UCYItemInstance* ItemInstance = Item.Instance;
+			if (ItemInstance == nullptr)
+				continue;
+
 			const UCYItemDefinition* ItemDefinition = ItemInstance->GetItemDefinition();
 
 			if (IsValid(ItemInstance) && IsValid(ItemDefinition))
@@ -138,7 +88,7 @@ bool UCYInventoryComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunc
 {
 	bool bWroteSomething = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
 
-	for (FCYInventoryEntry& Item : InventoryList.GetItemList())
+	for (FCYItemEntry& Item : InventoryList.GetItemList())
 	{
 		UCYItemInstance* ItemInstance = Item.Instance;
 
@@ -149,6 +99,11 @@ bool UCYInventoryComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunc
 	}
 
 	return bWroteSomething;
+}
+
+UCYItemInstance* UCYInventoryComponent::GetItem(int32 Index)
+{
+	return InventoryList.GetItem(Index);
 }
 
 void UCYInventoryComponent::AddItem(TSubclassOf<UCYItemDefinition> InItemDefinitionClass)
@@ -164,6 +119,14 @@ void UCYInventoryComponent::AddItemInstance(UCYItemInstance* InItemInstance)
 	if (GetOwner()->HasAuthority())
 	{
 		InventoryList.AddItem(InItemInstance);
+	}
+}
+
+void UCYInventoryComponent::AddItemInstanceToSlot(UCYItemInstance* InItemInstance, int32 Index)
+{
+	if (GetOwner()->HasAuthority())
+	{
+		InventoryList.AddItem(InItemInstance, Index);
 	}
 }
 

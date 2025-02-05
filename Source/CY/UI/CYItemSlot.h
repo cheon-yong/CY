@@ -22,6 +22,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetItemInfo(UCYItemDefinition* ItemDefinition);
 	
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int32 Index = 0;
+
 protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UImage> BgImage;

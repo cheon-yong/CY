@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
 #include "Inventory/CYItemDefinition.h"
 #include "Styling/SlateBrush.h"
 
@@ -18,6 +17,9 @@ class CY_API UCYItemFragment_ItemInfo : public UCYItemFragment
 	GENERATED_BODY()
 	
 public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = StackCount)
+	int32 MaxCount = 1;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Appearance)
 	FSlateBrush IconBrush;
 };

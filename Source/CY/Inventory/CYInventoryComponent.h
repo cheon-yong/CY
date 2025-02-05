@@ -3,69 +3,12 @@
 #pragma once
 
 #include "Components/ActorComponent.h"
-#include "Net/Serialization/FastArraySerializer.h"
+#include "Inventory/CYItemEntry.h"
 
 #include "CYInventoryComponent.generated.h"
 
 
 class UCYItemInstance;
-
-USTRUCT(BlueprintType)
-struct FCYInventoryEntry : public FFastArraySerializerItem
-{
-	GENERATED_BODY()
-
-	FCYInventoryEntry() {}
-
-	FString GetDebugString() const;
-	
-private:
-	friend FCYInventoryList;
-	friend UCYInventoryComponent;
-
-	UPROPERTY()
-	TObjectPtr<UCYItemInstance> Instance = nullptr;
-
-	UPROPERTY()
-	int32 StackCount = 0;
-
-	UPROPERTY(NotReplicated)
-	int32 LastObservedCount = INDEX_NONE;
-};
-
-
-USTRUCT(BlueprintType)
-struct FCYInventoryList : public FFastArraySerializer
-{
-	GENERATED_BODY()
-	
-	FCYInventoryList()
-		: OwnerComponent(nullptr)
-	{
-	}
-
-	FCYInventoryList(UActorComponent* InOwnerComponent)
-		: OwnerComponent(InOwnerComponent)
-	{
-	}
-
-	void AddItem(TSubclassOf<UCYItemDefinition> InItemDefinitionClass);
-	void AddItem(UCYItemInstance* InItemInstance);
-	void RemoveItem(UCYItemInstance* InItemInstance);
-	TArray<FCYInventoryEntry> GetItemList() { return Entries; }
-
-	TArray<UCYItemInstance*> GetAllItemInstances() const;
-
-private:
-	// Replicated list of items
-	UPROPERTY()
-	TArray<FCYInventoryEntry> Entries;
-
-	UPROPERTY(NotReplicated)
-	TObjectPtr<UActorComponent> OwnerComponent;
-};
-
-
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CY_API UCYInventoryComponent : public UActorComponent
@@ -83,10 +26,16 @@ public:
 	virtual bool ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
 
 	UFUNCTION(BlueprintCallable)
+	UCYItemInstance* GetItem(int32 Index);
+
+	UFUNCTION(BlueprintCallable)
 	void AddItem(TSubclassOf<UCYItemDefinition> InItemDefinitionClass);
 
 	UFUNCTION(BlueprintCallable)
 	void AddItemInstance(UCYItemInstance* InItemInstance);
+
+	UFUNCTION(BlueprintCallable)
+	void AddItemInstanceToSlot(UCYItemInstance* InItemInstance, int32 Index);
 
 	UFUNCTION(BlueprintCallable)
 	void RemoveItem(UCYItemInstance* InItemInstance);
@@ -99,10 +48,21 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int32 MaxItemCount = 20;
+
 	UPROPERTY(EditDefaultsOnly)
 	TArray<TSubclassOf<UCYItemDefinition>> DefaultItems;
 
+	// about widget
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int32 MaxRow = 4;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int32 MaxColumn = 5;
+	
+
 private:
 	UPROPERTY(Replicated)
-	FCYInventoryList InventoryList;
+	FCYItemList InventoryList;
 };

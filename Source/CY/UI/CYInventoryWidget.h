@@ -26,6 +26,6 @@ public:
 	void MakeItemSlots();
 	
 protected:
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<UCYItemInstance*> ItemInstances;
 };

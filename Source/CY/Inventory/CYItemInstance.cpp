@@ -12,9 +12,10 @@ UCYItemInstance::UCYItemInstance()
 {
 }
 
-void UCYItemInstance::Init(TSubclassOf<UCYItemDefinition> InItemDefinitionClass)
+void UCYItemInstance::Init(TSubclassOf<UCYItemDefinition> InItemDefinitionClass, int32 InStackCount)
 {
 	ItemDefinitionClass = InItemDefinitionClass;
+	StackCount = InStackCount;
 }
 
 void UCYItemInstance::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

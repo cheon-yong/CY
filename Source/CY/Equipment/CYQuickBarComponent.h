@@ -60,8 +60,8 @@ private:
 	UCYEquipmentComponent* FindEquipmentManager() const;
 
 protected:
-	UPROPERTY()
-	int32 NumSlots = 3;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int32 NumSlots = 5;
 
 	UFUNCTION()
 	void OnRep_Slots();

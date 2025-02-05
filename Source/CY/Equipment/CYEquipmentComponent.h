@@ -3,88 +3,11 @@
 #pragma once
 
 #include "Components/PawnComponent.h"
-#include "Net/Serialization/FastArraySerializer.h"
+#include "Inventory/CYItemEntry.h"
 
 #include "CYEquipmentComponent.generated.h"
 
 class UCYAbilitySystemComponent;
-
-
-/** A single piece of applied equipment */
-USTRUCT(BlueprintType)
-struct FCYAppliedEquipmentEntry : public FFastArraySerializerItem
-{
-	GENERATED_BODY()
-
-	FCYAppliedEquipmentEntry()
-	{}
-
-	FString GetDebugString() const;
-
-private:
-	friend FCYEquipmentList;
-	friend UCYEquipmentComponent;
-
-	// The equipment class that got equipped
-	UPROPERTY()
-	TSubclassOf<UCYItemDefinition> EquipmentDefinition;
-
-	UPROPERTY()
-	TObjectPtr<UCYItemInstance> Instance = nullptr;
-};
-
-/** List of applied equipment */
-USTRUCT(BlueprintType)
-struct FCYEquipmentList : public FFastArraySerializer
-{
-	GENERATED_BODY()
-
-	FCYEquipmentList()
-		: OwnerComponent(nullptr)
-	{
-	}
-
-	FCYEquipmentList(UActorComponent* InOwnerComponent)
-		: OwnerComponent(InOwnerComponent)
-	{
-	}
-
-public:
-	//~FFastArraySerializer contract
-	void PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize);
-	void PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize);
-	void PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize);
-	//~End of FFastArraySerializer contract
-
-	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParms)
-	{
-		return FFastArraySerializer::FastArrayDeltaSerialize<FCYAppliedEquipmentEntry, FCYEquipmentList>(Entries, DeltaParms, *this);
-	}
-
-	UCYItemInstance* AddEntry(TSubclassOf<UCYItemDefinition> EquipmentDefinition);
-	UCYItemInstance* AddEntry(UCYItemInstance* InItemInstance);
-	void RemoveEntry(UCYItemInstance* Instance);
-
-private:
-	UCYAbilitySystemComponent* GetAbilitySystemComponent() const;
-
-	friend UCYEquipmentComponent;
-
-private:
-	// Replicated list of equipment entries
-	UPROPERTY()
-	TArray<FCYAppliedEquipmentEntry> Entries;
-
-	UPROPERTY(NotReplicated)
-	TObjectPtr<UActorComponent> OwnerComponent;
-};
-
-template<>
-struct TStructOpsTypeTraits<FCYEquipmentList> : public TStructOpsTypeTraitsBase2<FCYEquipmentList>
-{
-	enum { WithNetDeltaSerializer = true };
-};
-
 /**
  * 
  */
@@ -122,7 +45,7 @@ public:
 
 	/** Returns all equipped instances of a given type, or an empty array if none are found */
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	TArray<UCYItemInstance*> GetEquipmentInstancesOfType(TSubclassOf<UCYItemInstance> InstanceType) const;
+	TArray<UCYItemInstance*> GetEquipmentInstancesOfType(TSubclassOf<UCYItemInstance> InstanceType);
 
 	template <typename T>
 	T* GetFirstInstanceOfType()
@@ -132,6 +55,5 @@ public:
 
 private:
 	UPROPERTY(Replicated)
-	FCYEquipmentList EquipmentList;
-
+	FCYItemList EquipmentList;
 };

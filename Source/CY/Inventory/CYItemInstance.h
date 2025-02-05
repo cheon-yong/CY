@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "CYItemInstance.generated.h"
 
 class UCYItemFragment;
@@ -20,7 +18,7 @@ class CY_API UCYItemInstance : public UObject
 public:
 	UCYItemInstance();
 
-	virtual void Init(TSubclassOf<UCYItemDefinition> InItemDefinitionClass);
+	virtual void Init(TSubclassOf<UCYItemDefinition> InItemDefinitionClass, int32 InStackCount = 1);
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -67,6 +65,10 @@ public:
 private:
 	UFUNCTION()
 	void OnRep_Instigator();
+
+public:
+	UPROPERTY(BlueprintReadOnly)
+	int32 StackCount = 0;
 
 private:
 	UPROPERTY(Replicated)
