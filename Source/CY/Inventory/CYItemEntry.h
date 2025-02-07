@@ -25,6 +25,8 @@ private:
 	friend UCYEquipmentComponent;
 
 	UPROPERTY()
+	int32 SlotIndex = 0;
+	UPROPERTY()
 	TObjectPtr<UCYItemInstance> Instance = nullptr;
 };
 
@@ -48,6 +50,11 @@ struct FCYItemList : public FFastArraySerializer
 		, MaxSize(InMaxSize)
 	{
 		Entries.SetNum(MaxSize);
+
+		for (int i = 0; i < MaxSize; i++)
+		{
+			Entries[i].SlotIndex = i;
+		}
 	}
 
 	int32 FindEmptyIndex();
@@ -58,6 +65,8 @@ struct FCYItemList : public FFastArraySerializer
 	UCYItemInstance* AddItem(UCYItemInstance* InItemInstance, int32 Index);
 
 	void RemoveItem(UCYItemInstance* InItemInstance);
+
+	void SwapItem(int32 a, int32 b);
 	
 	TArray<FCYItemEntry> GetItemList() { return Entries; }
 

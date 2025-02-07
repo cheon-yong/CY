@@ -32,6 +32,7 @@ void UCYInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+
 	// ...
 	
 }
@@ -124,9 +125,10 @@ void UCYInventoryComponent::AddItemInstance(UCYItemInstance* InItemInstance)
 
 void UCYInventoryComponent::AddItemInstanceToSlot(UCYItemInstance* InItemInstance, int32 Index)
 {
+	InventoryList.AddItem(InItemInstance, Index);
 	if (GetOwner()->HasAuthority())
 	{
-		InventoryList.AddItem(InItemInstance, Index);
+		
 	}
 }
 
@@ -136,5 +138,12 @@ void UCYInventoryComponent::RemoveItem(UCYItemInstance* InItemInstance)
 	{
 		InventoryList.RemoveItem(InItemInstance);
 	}
+}
+
+void UCYInventoryComponent::SwapItem(int32 a, int32 b)
+{
+	InventoryList.SwapItem(a, b);
+
+	auto Items = InventoryList.GetItemList();
 }
 
