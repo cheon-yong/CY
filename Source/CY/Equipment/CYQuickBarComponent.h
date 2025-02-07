@@ -47,11 +47,17 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure = false)
 	int32 GetNextFreeItemSlot() const;
 
+	UFUNCTION(BlueprintCallable, BlueprintPure = false)
+	UCYItemInstance* GetItemFromSlot(int32 Index) const;
+
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly)
 	void AddItemToSlot(int32 SlotIndex, UCYItemInstance* Item);
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly)
 	UCYItemInstance* RemoveItemFromSlot(int32 SlotIndex);
+
+	UFUNCTION(BlueprintCallable)
+	void SwapItem(int32 a, int32 b);
 
 private:
 	void UnequipItemInSlot();

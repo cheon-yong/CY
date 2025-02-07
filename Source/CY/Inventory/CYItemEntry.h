@@ -65,6 +65,7 @@ struct FCYItemList : public FFastArraySerializer
 	UCYItemInstance* AddItem(UCYItemInstance* InItemInstance, int32 Index);
 
 	void RemoveItem(UCYItemInstance* InItemInstance);
+	void RemoveItem(int32 Index);
 
 	void SwapItem(int32 a, int32 b);
 	

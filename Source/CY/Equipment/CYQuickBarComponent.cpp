@@ -143,6 +143,11 @@ int32 UCYQuickBarComponent::GetNextFreeItemSlot() const
 	return INDEX_NONE;
 }
 
+UCYItemInstance* UCYQuickBarComponent::GetItemFromSlot(int32 Index) const
+{
+	return Slots[Index];
+}
+
 void UCYQuickBarComponent::AddItemToSlot(int32 SlotIndex, UCYItemInstance* Item)
 {
 	if (Slots.IsValidIndex(SlotIndex) && (Item != nullptr))
@@ -178,6 +183,16 @@ UCYItemInstance* UCYQuickBarComponent::RemoveItemFromSlot(int32 SlotIndex)
 
 	return Result;
 }
+
+UE_DISABLE_OPTIMIZATION
+void UCYQuickBarComponent::SwapItem(int32 a, int32 b)
+{
+	UCYItemInstance* Temp = Slots[a];
+
+	Slots[a] = Slots[b];
+	Slots[b] = Temp;
+}
+UE_ENABLE_OPTIMIZATION
 
 UCYEquipmentComponent* UCYQuickBarComponent::FindEquipmentManager() const
 {

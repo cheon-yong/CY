@@ -140,6 +140,14 @@ void UCYInventoryComponent::RemoveItem(UCYItemInstance* InItemInstance)
 	}
 }
 
+void UCYInventoryComponent::RemoveItemFromSlot(int32 Index)
+{
+	if (GetOwner()->HasAuthority())
+	{
+		InventoryList.RemoveItem(Index);
+	}
+}
+
 void UCYInventoryComponent::SwapItem(int32 a, int32 b)
 {
 	InventoryList.SwapItem(a, b);

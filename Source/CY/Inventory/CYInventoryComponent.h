@@ -41,6 +41,9 @@ public:
 	void RemoveItem(UCYItemInstance* InItemInstance);
 
 	UFUNCTION(BlueprintCallable)
+	void RemoveItemFromSlot(int32 Index);
+
+	UFUNCTION(BlueprintCallable)
 	void SwapItem(int32 a, int32 b);
 
 	UFUNCTION(BlueprintCallable)

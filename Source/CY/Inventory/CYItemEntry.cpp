@@ -90,7 +90,11 @@ void FCYItemList::RemoveItem(UCYItemInstance* InItemInstance)
 	}
 }
 
-UE_DISABLE_OPTIMIZATION
+void FCYItemList::RemoveItem(int32 Index)
+{
+	Entries[Index].Instance = nullptr;
+}
+
 // TODO : 더 세련된 방법이 있을 듯
 void FCYItemList::SwapItem(int32 a, int32 b)
 {
@@ -100,9 +104,8 @@ void FCYItemList::SwapItem(int32 a, int32 b)
 	Entries[b].Instance = Entries[a].Instance;
 	Entries[a].Instance = temp.Instance;
 
-	//MarkArrayDirty();
+	MarkArrayDirty();
 }
-UE_ENABLE_OPTIMIZATION
 
 TArray<UCYItemInstance*> FCYItemList::GetAllItemInstances() const
 {
