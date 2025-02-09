@@ -217,6 +217,7 @@ UCYItemInstance* UCYEquipmentComponent::EquipItemInstance(UCYItemInstance* InIte
 	return Result;
 }
 
+UE_DISABLE_OPTIMIZATION
 void UCYEquipmentComponent::SpawnItemActor(UCYItemInstance* InItemInstance)
 {
 	if (APawn* OwningPawn = Cast<APawn>(GetOwner()))
@@ -229,6 +230,7 @@ void UCYEquipmentComponent::SpawnItemActor(UCYItemInstance* InItemInstance)
 		}
 	}
 }
+UE_ENABLE_OPTIMIZATION
 
 void UCYEquipmentComponent::GiveAbilityToActor(UCYItemInstance* InItemInstance)
 {

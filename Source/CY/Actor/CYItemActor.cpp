@@ -19,11 +19,14 @@ ACYItemActor::ACYItemActor()
 	bReplicates = true;
 	SetReplicateMovement(true);
 
+	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
+	RootComponent = SkeletalMeshComponent;
+
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	SphereComponent->SetupAttachment(RootComponent);
 
-	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
-	SkeletalMeshComponent->SetupAttachment(RootComponent);
+	
+	
 }
 
 void ACYItemActor::Init(UCYItemInstance* InItemInstance)
@@ -31,9 +34,14 @@ void ACYItemActor::Init(UCYItemInstance* InItemInstance)
 	ItemInstance = InItemInstance;
 }
 
+void ACYItemActor::OnEquipped()
+{
+	SetItemState(EItemState::Equipped);
+}
+
 void ACYItemActor::OnDropped()
 {
-	ItemState = EItemState::Dropped;
+	SetItemState(EItemState::Dropped);
 
 	if (AActor* ActorOwner = GetOwner())
 	{
@@ -77,6 +85,11 @@ void ACYItemActor::OnUse()
 {
 }
 
+void ACYItemActor::SetItemState(EItemState NewState)
+{
+	ItemState = NewState;
+}
+
 // Called when the game starts or when spawned
 void ACYItemActor::BeginPlay()
 {
@@ -90,7 +103,7 @@ void ACYItemActor::BeginPlay()
 			ItemInstance->Init(ItemDefinitionClass);
 
 			SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-			SphereComponent->SetGenerateOverlapEvents(true);
+			SphereComponent->SetGenerateOverlapEvents(false);
 		}
 	}
 }

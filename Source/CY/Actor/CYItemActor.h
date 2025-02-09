@@ -31,8 +31,11 @@ public:
 
 	virtual void Init(UCYItemInstance* InItemInstance);
 
+	virtual void OnEquipped();
 	virtual void OnDropped();
 	virtual void OnUse();
+
+	void SetItemState(EItemState NewState);
 
 protected:
 	// Called when the game starts or when spawned

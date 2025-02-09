@@ -79,9 +79,9 @@ void UCYItemInstance::OnUnequipped()
 	
 }
 
+UE_DISABLE_OPTIMIZATION
 void UCYItemInstance::SpawnEquipmentActors(const TArray<FCYEquipmentActorToSpawn>& ActorsToSpawn)
 {
-	
 	if (APawn* OwningPawn = GetPawn())
 	{
 		USceneComponent* AttachTarget = OwningPawn->GetRootComponent();
@@ -93,6 +93,8 @@ void UCYItemInstance::SpawnEquipmentActors(const TArray<FCYEquipmentActorToSpawn
 		for (const FCYEquipmentActorToSpawn& SpawnInfo : ActorsToSpawn)
 		{
 			ACYItemActor* NewActor = GetWorld()->SpawnActorDeferred<ACYItemActor>(SpawnInfo.ActorToSpawn, FTransform::Identity, OwningPawn);
+			NewActor->Init(this);
+			NewActor->SetItemState(EItemState::Equipped);
 			NewActor->FinishSpawning(FTransform::Identity, /*bIsDefaultTransform=*/ true);
 			NewActor->SetActorRelativeTransform(SpawnInfo.AttachTransform);
 			NewActor->AttachToComponent(AttachTarget, FAttachmentTransformRules::KeepRelativeTransform, SpawnInfo.AttachSocket);
@@ -101,6 +103,7 @@ void UCYItemInstance::SpawnEquipmentActors(const TArray<FCYEquipmentActorToSpawn
 		}
 	}
 }
+UE_ENABLE_OPTIMIZATION
 
 void UCYItemInstance::DestroyEquipmentActors()
 {

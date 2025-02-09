@@ -41,7 +41,7 @@ UCYItemInstance* FCYItemList::AddItem(TSubclassOf<UCYItemDefinition> InItemDefin
 		return nullptr;
 
 	FCYItemEntry Item;
-	Item.Instance = NewObject<UCYItemInstance>();
+	Item.Instance = NewObject<UCYItemInstance>(OwnerComponent->GetOwner());
 	Item.Instance->Init(InItemDefinitionClass);
 	Item.Instance->StackCount = StackCount;
 	Entries[EmptyIndex] = Item;
