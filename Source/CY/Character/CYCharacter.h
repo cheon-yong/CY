@@ -16,6 +16,7 @@ class UCYAttributeSet;
 class UCYWidgetComponent;
 class UCYInventoryComponent;
 struct FInputActionValue;
+class UCYEquipmentComponent;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -83,8 +84,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = UI)
 	TObjectPtr<UCYWidgetComponent> HpBar;
 
-	UPROPERTY(EditAnywhere, Replicated)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Inventory, Replicated)
 	TObjectPtr<UCYInventoryComponent> InventoryComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Equipment, Replicated, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UCYEquipmentComponent> EquipmentComponent;
 
 private:
 	UPROPERTY(ReplicatedUsing = OnRep_MyTeamID)

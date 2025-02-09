@@ -76,6 +76,7 @@ void UCYQuickBarComponent::CycleActiveSlotBackward()
 	} while (NewIndex != OldIndex);
 }
 
+UE_DISABLE_OPTIMIZATION
 void UCYQuickBarComponent::EquipItemInSlot()
 {
 	check(Slots.IsValidIndex(ActiveSlotIndex));
@@ -96,6 +97,7 @@ void UCYQuickBarComponent::EquipItemInSlot()
 		}
 	}
 }
+UE_ENABLE_OPTIMIZATION
 
 void UCYQuickBarComponent::UnequipItemInSlot()
 {

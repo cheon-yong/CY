@@ -42,6 +42,8 @@ public:
 protected:
 	virtual void OnRep_ActivateAbilities() override;
 
+	void TryActivateAbilitiesOnSpawn();
+
 protected:
 	// Handles to abilities that had their input pressed this frame.
 	TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles;

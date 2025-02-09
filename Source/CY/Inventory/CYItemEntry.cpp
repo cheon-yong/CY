@@ -50,11 +50,19 @@ UCYItemInstance* FCYItemList::AddItem(TSubclassOf<UCYItemDefinition> InItemDefin
 	return Item.Instance;
 }
 
-UCYItemInstance* FCYItemList::AddItem(UCYItemInstance* InItemInstance)
+UCYItemInstance* FCYItemList::AddItem(UCYItemInstance* InItemInstance, bool bAddForce)
 {
 	int32 EmptyIndex = FindEmptyIndex();
-	if (EmptyIndex == INDEX_NONE)
+	if (EmptyIndex == INDEX_NONE && bAddForce == false)
 		return nullptr;
+
+	if (bAddForce)
+	{
+		FCYItemEntry& AddedItem = Entries.AddDefaulted_GetRef();
+		AddedItem.Instance = InItemInstance;
+		MarkItemDirty(AddedItem);
+		return AddedItem.Instance;
+	}
 
 	FCYItemEntry Item;
 	Item.Instance = InItemInstance;
@@ -106,6 +114,7 @@ void FCYItemList::SwapItem(int32 a, int32 b)
 
 	MarkArrayDirty();
 }
+
 
 TArray<UCYItemInstance*> FCYItemList::GetAllItemInstances() const
 {

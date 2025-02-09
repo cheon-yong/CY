@@ -10,6 +10,7 @@
 #include "UI/CYWidgetComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Inventory/CYInventoryComponent.h"
+#include "Equipment/CYEquipmentComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -24,6 +25,9 @@ ACYCharacter::ACYCharacter()
 
 	InventoryComponent = CreateDefaultSubobject<UCYInventoryComponent>(TEXT("InventoryComponent"));
 	InventoryComponent->SetIsReplicated(true);
+
+	EquipmentComponent = CreateDefaultSubobject<UCYEquipmentComponent>(TEXT("EquipmentComponent"));
+	EquipmentComponent->SetIsReplicated(true);
 
 	//GetMesh()->SetIsReplicated(true);
 }

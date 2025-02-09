@@ -25,6 +25,8 @@ void UCYAbilitySystemComponent::EndPlay(const EEndPlayReason::Type EndPlayReason
 void UCYAbilitySystemComponent::InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor)
 {
 	Super::InitAbilityActorInfo(InOwnerActor, InAvatarActor);
+
+	TryActivateAbilitiesOnSpawn();
 }
 
 void UCYAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InputTag)
@@ -217,4 +219,15 @@ void UCYAbilitySystemComponent::ClearAbilityInput()
 void UCYAbilitySystemComponent::OnRep_ActivateAbilities()
 {
 	Super::OnRep_ActivateAbilities();
+}
+
+void UCYAbilitySystemComponent::TryActivateAbilitiesOnSpawn()
+{
+	for (const FGameplayAbilitySpec& AbilitySpec : ActivatableAbilities.Items)
+	{
+		if (const UCYGameplayAbility* LyraAbilityCDO = Cast<UCYGameplayAbility>(AbilitySpec.Ability))
+		{
+			LyraAbilityCDO->TryActivateAbilityOnSpawn(AbilityActorInfo.Get(), AbilitySpec);
+		}
+	}
 }

@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 #include "Inventory/CYItemFragment_EquippableItem.h"
+#include "Actor/CYItemActor.h"
 
 UCYItemInstance::UCYItemInstance()
 {
@@ -75,10 +76,12 @@ void UCYItemInstance::OnEquipped()
 void UCYItemInstance::OnUnequipped()
 {
 	K2_OnUnequipped();
+	
 }
 
 void UCYItemInstance::SpawnEquipmentActors(const TArray<FCYEquipmentActorToSpawn>& ActorsToSpawn)
 {
+	
 	if (APawn* OwningPawn = GetPawn())
 	{
 		USceneComponent* AttachTarget = OwningPawn->GetRootComponent();
@@ -86,10 +89,10 @@ void UCYItemInstance::SpawnEquipmentActors(const TArray<FCYEquipmentActorToSpawn
 		{
 			AttachTarget = Char->GetMesh();
 		}
-
+		
 		for (const FCYEquipmentActorToSpawn& SpawnInfo : ActorsToSpawn)
 		{
-			AActor* NewActor = GetWorld()->SpawnActorDeferred<AActor>(SpawnInfo.ActorToSpawn, FTransform::Identity, OwningPawn);
+			ACYItemActor* NewActor = GetWorld()->SpawnActorDeferred<ACYItemActor>(SpawnInfo.ActorToSpawn, FTransform::Identity, OwningPawn);
 			NewActor->FinishSpawning(FTransform::Identity, /*bIsDefaultTransform=*/ true);
 			NewActor->SetActorRelativeTransform(SpawnInfo.AttachTransform);
 			NewActor->AttachToComponent(AttachTarget, FAttachmentTransformRules::KeepRelativeTransform, SpawnInfo.AttachSocket);

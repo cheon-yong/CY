@@ -10,6 +10,7 @@
 #include "AbilitySystem/CYAbilitySystemComponent.h"
 #include "InputActionValue.h"
 #include "Camera/CameraComponent.h"
+#include "Equipment/CYEquipmentComponent.h"
 #include "CY.H"
 
 ACYPlayerCharacter::ACYPlayerCharacter()

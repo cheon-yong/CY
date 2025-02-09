@@ -25,6 +25,10 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly)
 	UCYItemInstance* EquipItemInstance(UCYItemInstance* InItemInstance);
 
+	void SpawnItemActor(UCYItemInstance* InItemInstance);
+
+	void GiveAbilityToActor(UCYItemInstance* InItemInstance);
+
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly)
 	void UnequipItem(UCYItemInstance* ItemInstance);
 
@@ -52,6 +56,8 @@ public:
 	{
 		return (T*)GetFirstInstanceOfType(T::StaticClass());
 	}
+
+	UCYAbilitySystemComponent* GetAbilitySystemComponent();
 
 private:
 	UPROPERTY(Replicated)

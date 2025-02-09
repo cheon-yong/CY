@@ -61,14 +61,13 @@ struct FCYItemList : public FFastArraySerializer
 
 	UCYItemInstance* GetItem(int32 Index);
 	UCYItemInstance* AddItem(TSubclassOf<UCYItemDefinition> InItemDefinitionClass, int32 StackCount = 1);
-	UCYItemInstance* AddItem(UCYItemInstance* InItemInstance);
+	UCYItemInstance* AddItem(UCYItemInstance* InItemInstance, bool bAddForce = false);
 	UCYItemInstance* AddItem(UCYItemInstance* InItemInstance, int32 Index);
 
 	void RemoveItem(UCYItemInstance* InItemInstance);
 	void RemoveItem(int32 Index);
-
 	void SwapItem(int32 a, int32 b);
-	
+
 	TArray<FCYItemEntry> GetItemList() { return Entries; }
 
 	TArray<UCYItemInstance*> GetAllItemInstances() const;

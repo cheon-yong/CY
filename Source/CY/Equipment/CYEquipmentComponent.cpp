@@ -9,6 +9,8 @@
 #include "Inventory/CYItemInstance.h"
 #include "Net/UnrealNetwork.h"
 #include "AbilitySystem/CYAbilitySystemComponent.h"
+#include "GameFramework/Character.h"
+#include <Inventory/CYItemFragment_EquippableItem.h>
 
 ////////////////////////////////////////////////////////////////////////
 //// FCYAppliedEquipmentEntry
@@ -180,6 +182,8 @@ UCYItemInstance* UCYEquipmentComponent::EquipItem(TSubclassOf<UCYItemDefinition>
 		Result = EquipmentList.AddItem(InItemDefinition);
 		if (Result != nullptr)
 		{
+			SpawnItemActor(Result);
+			GiveAbilityToActor(Result);
 			Result->OnEquipped();
 
 			if (IsUsingRegisteredSubObjectList() && IsReadyForReplication())
@@ -196,9 +200,11 @@ UCYItemInstance* UCYEquipmentComponent::EquipItemInstance(UCYItemInstance* InIte
 	UCYItemInstance* Result = nullptr;
 	if (InItemInstance != nullptr)
 	{
-		Result = EquipmentList.AddItem(InItemInstance);
+		Result = EquipmentList.AddItem(InItemInstance, true);
 		if (Result != nullptr)
 		{
+			SpawnItemActor(Result);
+			GiveAbilityToActor(Result);
 			Result->OnEquipped();
 
 			if (IsUsingRegisteredSubObjectList() && IsReadyForReplication())
@@ -209,6 +215,30 @@ UCYItemInstance* UCYEquipmentComponent::EquipItemInstance(UCYItemInstance* InIte
 	}
 
 	return Result;
+}
+
+void UCYEquipmentComponent::SpawnItemActor(UCYItemInstance* InItemInstance)
+{
+	if (APawn* OwningPawn = Cast<APawn>(GetOwner()))
+	{
+		if (const UCYItemFragment_EquippableItem* EquipInfo = InItemInstance->FindFragmentByClass<UCYItemFragment_EquippableItem>())
+		{
+			const TArray<FCYEquipmentActorToSpawn> ActorsToSpawn = EquipInfo->ActorsToSpawn;
+
+			InItemInstance->SpawnEquipmentActors(ActorsToSpawn);
+		}
+	}
+}
+
+void UCYEquipmentComponent::GiveAbilityToActor(UCYItemInstance* InItemInstance)
+{
+	if (UCYAbilitySystemComponent* ASC = GetAbilitySystemComponent())
+	{
+		//for (const TObjectPtr<const ULyraAbilitySet>& AbilitySet : EquipmentCDO->AbilitySetsToGrant)
+		//{
+		//	AbilitySet->GiveToAbilitySystem(ASC, /*inout*/ &NewEntry.GrantedHandles, Result);
+		//}
+	}
 }
 
 void UCYEquipmentComponent::UnequipItem(UCYItemInstance* ItemInstance)
@@ -314,4 +344,10 @@ TArray<UCYItemInstance*> UCYEquipmentComponent::GetEquipmentInstancesOfType(TSub
 		}
 	}
 	return Results;
+}
+
+UCYAbilitySystemComponent* UCYEquipmentComponent::GetAbilitySystemComponent()
+{
+	AActor* OwningActor = GetOwner();
+	return Cast<UCYAbilitySystemComponent>(UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(OwningActor));
 }

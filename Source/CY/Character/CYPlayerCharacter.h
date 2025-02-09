@@ -10,6 +10,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
+class UCYEquipmentComponent;
 
 
 
@@ -30,7 +31,6 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	virtual void AddCharacterAbilities() override;
-
 
 protected:
 
