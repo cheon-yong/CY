@@ -7,6 +7,7 @@
 #include "AbilitySystem/CYAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/CYAttributeSet.h"
 #include "Net/UnrealNetwork.h"
+#include "GameFramework/GameplayMessageSubsystem.h"
 
 ACYPlayerState::ACYPlayerState(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -67,6 +68,44 @@ FGenericTeamId ACYPlayerState::GetGenericTeamId() const
 FOnCYTeamIndexChangedDelegate* ACYPlayerState::GetOnTeamIndexChangedDelegate()
 {
 	return &OnTeamChangedDelegate;
+}
+
+void ACYPlayerState::AddStatTagStack(FGameplayTag Tag, int32 StackCount)
+{
+	StatTags.AddStack(Tag, StackCount);
+}
+
+void ACYPlayerState::RemoveStatTagStack(FGameplayTag Tag, int32 StackCount)
+{
+	StatTags.RemoveStack(Tag, StackCount);
+}
+
+int32 ACYPlayerState::GetStatTagStackCount(FGameplayTag Tag) const
+{
+	return StatTags.GetStackCount(Tag);
+}
+
+bool ACYPlayerState::HasStatTag(FGameplayTag Tag) const
+{
+	return StatTags.ContainsTag(Tag);
+}
+
+void ACYPlayerState::ClientBroadcastMessage_Implementation(const FCYVerbMessage Message)
+{
+	// This check is needed to prevent running the action when in standalone mode
+	if (GetNetMode() == NM_Client)
+	{
+		UGameplayMessageSubsystem::Get(this).BroadcastMessage(Message.Verb, Message);
+	}
+}
+
+FRotator ACYPlayerState::GetReplicatedViewRotation() const
+{
+	return FRotator();
+}
+
+void ACYPlayerState::SetReplicatedViewRotation(const FRotator& NewRotation)
+{
 }
 
 void ACYPlayerState::OnRep_MyTeamID(FGenericTeamId OldTeamID)

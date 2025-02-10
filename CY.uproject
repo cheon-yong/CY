@@ -35,7 +35,15 @@
 			"Enabled": true
 		},
 		{
+			"Name": "OnlineServicesNull",
+			"Enabled": true
+		},
+		{
 			"Name": "OnlineSubsystemSteam",
+			"Enabled": true
+		},
+		{
+			"Name": "GameplayMessageRouter",
 			"Enabled": true
 		}
 	]

@@ -38,6 +38,9 @@ public class CY : ModuleRules
 			"OnlineSubsystemSteam",
 			"OnlineSubsystemNull",
 			"OnlineSubsystemUtils",
+
+			// MessageSystem
+			"GameplayMessageRuntime",
 		});
 	}
 }
