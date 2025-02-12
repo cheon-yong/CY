@@ -31,6 +31,8 @@ class CY_API UCYGameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
 	
+	friend class UCYAbilitySystemComponent;
+
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Input", meta = (Categories = InputTag))
 	FGameplayTag InputTag;
@@ -58,6 +60,12 @@ protected:
 	virtual void CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 	//~End of UGameplayAbility interface
+
+	virtual void OnPawnAvatarSet();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = Ability, DisplayName = "OnPawnAvatarSet")
+	void K2_OnPawnAvatarSet();
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CY|Ability Activation")
 	ECYAbilityActivationPolicy ActivationPolicy;

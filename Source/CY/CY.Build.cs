@@ -23,6 +23,7 @@ public class CY : ModuleRules
 			"NavigationSystem",
 			"AIModule",
 			"ModularGameplay",
+			"ModularGameplayActors",
 			"GameFeatures",
 			"GameplayAbilities",
 			"GameplayTasks",
@@ -41,6 +42,14 @@ public class CY : ModuleRules
 
 			// MessageSystem
 			"GameplayMessageRuntime",
+
+			// Setting
+			"DeveloperSettings",
+
+			// Common
+			"CommonGame",
+			"CommonUser",
+			"CommonUI",
 		});
 	}
 }

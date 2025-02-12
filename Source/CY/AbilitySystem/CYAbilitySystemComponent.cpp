@@ -3,7 +3,9 @@
 
 #include "AbilitySystem/CYAbilitySystemComponent.h"
 #include "AbilitySystem/Abilities/CYGameplayAbility.h"
+#include "Animation/CYAnimInstance.h"
 #include "CYGameplayTags.h"
+#include "CYGlobalAbilitySystem.h"
 
 using namespace CYGameplayTags;
 
@@ -24,9 +26,59 @@ void UCYAbilitySystemComponent::EndPlay(const EEndPlayReason::Type EndPlayReason
 
 void UCYAbilitySystemComponent::InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor)
 {
+	FGameplayAbilityActorInfo* ActorInfo = AbilityActorInfo.Get();
+	check(ActorInfo);
+	check(InOwnerActor);
+
+	const bool bHasNewPawnAvatar = Cast<APawn>(InAvatarActor) && (InAvatarActor != ActorInfo->AvatarActor);
+
 	Super::InitAbilityActorInfo(InOwnerActor, InAvatarActor);
 
-	TryActivateAbilitiesOnSpawn();
+	if (bHasNewPawnAvatar)
+	{
+		// Notify all abilities that a new pawn avatar has been set
+		for (const FGameplayAbilitySpec& AbilitySpec : ActivatableAbilities.Items)
+		{
+			UCYGameplayAbility* CYAbilityCDO = Cast<UCYGameplayAbility>(AbilitySpec.Ability);
+			if (!CYAbilityCDO)
+			{
+				continue;
+			}
+
+			if (CYAbilityCDO->GetInstancingPolicy() != EGameplayAbilityInstancingPolicy::NonInstanced)
+			{
+				TArray<UGameplayAbility*> Instances = AbilitySpec.GetAbilityInstances();
+				for (UGameplayAbility* AbilityInstance : Instances)
+				{
+					UCYGameplayAbility* CYAbilityInstance = Cast<UCYGameplayAbility>(AbilityInstance);
+					if (CYAbilityInstance)
+					{
+						// Ability instances may be missing for replays
+						CYAbilityInstance->OnPawnAvatarSet();
+					}
+				}
+			}
+			else
+			{
+				CYAbilityCDO->OnPawnAvatarSet();
+			}
+		}
+
+		// Register with the global system once we actually have a pawn avatar. We wait until this time since some globally-applied effects may require an avatar.
+		if (UCYGlobalAbilitySystem* GlobalAbilitySystem = UWorld::GetSubsystem<UCYGlobalAbilitySystem>(GetWorld()))
+		{
+			GlobalAbilitySystem->RegisterASC(this);
+		}
+
+		if (UCYAnimInstance* CYAnimInst = Cast<UCYAnimInstance>(ActorInfo->GetAnimInstance()))
+		{
+			CYAnimInst->InitializeWithAbilitySystem(this);
+		}
+
+		TryActivateAbilitiesOnSpawn();
+	}
+
+	
 }
 
 void UCYAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InputTag)

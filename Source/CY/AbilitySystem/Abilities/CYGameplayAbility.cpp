@@ -105,3 +105,8 @@ void UCYGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, con
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
+
+void UCYGameplayAbility::OnPawnAvatarSet()
+{
+	K2_OnPawnAvatarSet();
+}
