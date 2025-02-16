@@ -25,6 +25,9 @@ public class CY : ModuleRules
 			"ModularGameplay",
 			"ModularGameplayActors",
 			"GameFeatures",
+			"ControlFlows",
+
+			// GAS
 			"GameplayAbilities",
 			"GameplayTasks",
 			"GameplayTags",
@@ -50,6 +53,8 @@ public class CY : ModuleRules
 			"CommonGame",
 			"CommonUser",
 			"CommonUI",
+			"CommonInput",
+			"CommonLoadingScreen",
 		});
 	}
 }
