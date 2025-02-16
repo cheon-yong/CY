@@ -53,7 +53,7 @@ FGenericTeamId UCYLocalPlayer::GetGenericTeamId() const
 
 FOnCYTeamIndexChangedDelegate* UCYLocalPlayer::GetOnTeamIndexChangedDelegate()
 {
-	return nullptr;
+	return &OnTeamChangedDelegate;
 }
 
 void UCYLocalPlayer::OnPlayerControllerChanged(APlayerController* NewController)
