@@ -57,12 +57,12 @@ void UCYInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 
 			if (IsValid(ItemInstance) && IsValid(ItemDefinition))
 			{
-				GEngine->AddOnScreenDebugMessage(
+				/*GEngine->AddOnScreenDebugMessage(
 					-1,
 					0,
 					FColor::Blue,
 					FString::Printf(TEXT("Item : %s"), *ItemDefinition->ItemName.ToString())
-				);
+				);*/
 			}
 		}
 	}
