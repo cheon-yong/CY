@@ -7,18 +7,30 @@
 #include "Net/UnrealNetwork.h"
 #include "EngineUtils.h"
 #include "Actor/CYSection.h"
+#include "Game/FieldItemData.h"
 
 
 UItemSpawnComponent::UItemSpawnComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
+	bInitialized = false;
 }
 
 void UItemSpawnComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Init();
+}
+
+void UItemSpawnComponent::Init()
+{
+
 	GetAllSectionInWorld();
+	CalculateItemRatio();
+
+	bInitialized = true;
+	OnInitialize.Broadcast();
 }
 
 void UItemSpawnComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -43,11 +55,32 @@ void UItemSpawnComponent::GetAllSectionInWorld()
 }
 
 
+// Create Random Item 
+// TO DO : 알고리즘 활용해보기. priority_queue 등
+void UItemSpawnComponent::CalculateItemRatio()
+{
+	for (FItemToSpawn& ItemData : FieldItemData->GetItemsToSpawn())
+	{
+		int CountPerSection = ItemData.CountToCreate / Sections.Num();
+
+		for (TObjectPtr<ACYSection> Section : Sections)
+		{
+			Section->SetOrAddItemDefWithCount(ItemData.ItemDef, CountPerSection);
+		}
+
+		int remainCount = ItemData.CountToCreate - (CountPerSection * Sections.Num());
+		int index = 0;
+		while(remainCount > 0)
+		{
+			Sections[index]->SetOrAddItemDefWithCount(ItemData.ItemDef, 1);
+			index++;
+			remainCount--;
+		}
+	}
+}
+
+
 void UItemSpawnComponent::SpawnItems()
 {
 
-	/*for (TSubclassOf<UCYItemDefinition> ItemDef : ItemsToSpawn)
-	{
-
-	}*/
 }

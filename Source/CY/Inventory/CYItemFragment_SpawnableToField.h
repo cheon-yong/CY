@@ -2,9 +2,10 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
 #include "Inventory/CYItemDefinition.h"
 #include "CYItemFragment_SpawnableToField.generated.h"
+
+class ACYItemActor;
 
 /**
  * 
@@ -16,4 +17,6 @@ class CY_API UCYItemFragment_SpawnableToField : public UCYItemFragment
 	
 public:
 
+	UPROPERTY(EditAnywhere, Category = Equipment)
+	TSubclassOf<ACYItemActor> ActorToSpawn;
 };

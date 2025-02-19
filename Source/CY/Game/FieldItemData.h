@@ -35,6 +35,8 @@ class CY_API UFieldItemData : public UDataAsset
 public:
 	UFieldItemData();
 
+	TArray<FItemToSpawn> GetItemsToSpawn() { return ItemsToSpawn; };
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item")
 	TArray<FItemToSpawn> ItemsToSpawn;

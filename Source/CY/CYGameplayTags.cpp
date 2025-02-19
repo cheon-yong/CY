@@ -13,6 +13,8 @@ namespace CYGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Attack_Basic, "InputTag.Attack.Basic", "Attack Basic");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Gameplay_AbilityInputBlocked, "Gameplay.AbilityInputBlocked", "Ability Input Blocked");
 
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Type_Weapon, "Item.Type.Weapon", "Weapon Item");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Type_Potion, "Item.Type.Potion", "Potion Item");
 
 	FGameplayTag FindTagByString(const FString& TagString, bool bMatchPartialString)
 	{

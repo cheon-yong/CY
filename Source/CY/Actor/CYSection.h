@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "CYGameplayTags.h"
+
 #include "CYSection.generated.h"
 
 class UBoxComponent;
@@ -20,16 +21,29 @@ public:
 	// Sets default values for this actor's properties
 	ACYSection();
 
+
+public:
+	void Init();
+
+	void SetOrAddItemDefWithCount(TSubclassOf<UCYItemDefinition> ItemDef, int32 Count);
+
+	UFUNCTION()
+	void SpawnItemToPoint();
+
+	TObjectPtr<ACYItemSpawnPoint> GetRandomSpawnPoint();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	void GetAllSpawnPoints();
+	TSubclassOf<UCYItemDefinition> GetRandomItemDefByTag(FGameplayTag ItemType);
 
 public:	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UBoxComponent> Area;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TMap<TObjectPtr<UCYItemDefinition>, int32> ItemDefToCreate;
+	TMap<TSubclassOf<UCYItemDefinition>, int32> ItemDefToCreate;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<TObjectPtr<UCYItemInstance>, int32> ItemsInSection;
