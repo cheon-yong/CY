@@ -4,12 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Inventory/IPickupable.h"
+#include "Interaction/IInteractableTarget.h"
+#include "Interaction/InteractionOption.h"
+
 #include "CYItemActor.generated.h"
 
 class USkeletalMeshComponent;
 class UCYItemInstance;
 class UCYItemDefinition;
-class USphereComponent;
+class UBoxComponent;
 
 UENUM(BlueprintType)
 enum EItemState : uint8
@@ -21,7 +25,7 @@ enum EItemState : uint8
 };
 
 UCLASS(BlueprintType, Blueprintable)
-class CY_API ACYItemActor : public AActor
+class CY_API ACYItemActor : public AActor, public IPickupable, public IInteractableTarget
 {
 	GENERATED_BODY()
 	
@@ -36,6 +40,9 @@ public:
 	virtual void OnUse();
 
 	void SetItemState(EItemState NewState);
+
+	virtual void GatherInteractionOptions(const FInteractionQuery& InteractQuery, FInteractionOptionBuilder& InteractionBuilder) override;
+	virtual FInventoryPickup GetPickupInventory() const override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -54,11 +61,15 @@ protected:
 	TEnumAsByte<EItemState> ItemState = EItemState::None;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TObjectPtr<USphereComponent> SphereComponent = nullptr;
+	TObjectPtr<UBoxComponent> BoxComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Replicated)
 	TObjectPtr<UCYItemInstance> ItemInstance;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UCYItemDefinition> ItemDefinitionClass;
+
+	UPROPERTY(EditAnywhere)
+	FInteractionOption Option;
+
 };

@@ -6,7 +6,7 @@
 #include "Net/UnrealNetwork.h"
 #include "Engine/ActorChannel.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "Components/SphereComponent.h"
+#include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Inventory/CYItemInstance.h"
 #include "Inventory/CYItemDefinition.h"
@@ -19,13 +19,11 @@ ACYItemActor::ACYItemActor()
 	bReplicates = true;
 	SetReplicateMovement(true);
 
+	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
+	RootComponent = BoxComponent;
+
 	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
-	RootComponent = SkeletalMeshComponent;
-
-	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
-	SphereComponent->SetupAttachment(RootComponent);
-
-	
+	SkeletalMeshComponent->SetupAttachment(RootComponent);
 	
 }
 
@@ -76,8 +74,8 @@ void ACYItemActor::OnDropped()
 
 		SetActorLocation(TargetLocation);
 
-		SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		SphereComponent->SetGenerateOverlapEvents(true);
+		BoxComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		BoxComponent->SetGenerateOverlapEvents(true);
 	}
 }
 
@@ -88,6 +86,19 @@ void ACYItemActor::OnUse()
 void ACYItemActor::SetItemState(EItemState NewState)
 {
 	ItemState = NewState;
+}
+
+void ACYItemActor::GatherInteractionOptions(const FInteractionQuery& InteractQuery, FInteractionOptionBuilder& InteractionBuilder)
+{
+	InteractionBuilder.AddInteractionOption(Option);
+}
+
+FInventoryPickup ACYItemActor::GetPickupInventory() const
+{
+	FInventoryPickup InventoryPickup;
+	InventoryPickup.Instances.Add(FPickupInstance(ItemInstance));
+	InventoryPickup.Templates.Add(FPickupTemplate(ItemDefinitionClass, ItemInstance->StackCount));
+	return InventoryPickup;
 }
 
 // Called when the game starts or when spawned
@@ -102,8 +113,8 @@ void ACYItemActor::BeginPlay()
 			ItemInstance = NewObject<UCYItemInstance>();
 			ItemInstance->Init(ItemDefinitionClass);
 
-			SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-			SphereComponent->SetGenerateOverlapEvents(false);
+			BoxComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+			BoxComponent->SetGenerateOverlapEvents(false);
 		}
 	}
 }
@@ -124,12 +135,12 @@ void ACYItemActor::OnRep_ItemState()
 	case EItemState::None :
 		break;
 	case EItemState::Equipped :
-		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		SphereComponent->SetGenerateOverlapEvents(false);
+		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		BoxComponent->SetGenerateOverlapEvents(false);
 		break;
 	case EItemState::Dropped :
-		SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		SphereComponent->SetGenerateOverlapEvents(true);
+		BoxComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		BoxComponent->SetGenerateOverlapEvents(true);
 		break;
 	case EItemState::MAX :
 		break;

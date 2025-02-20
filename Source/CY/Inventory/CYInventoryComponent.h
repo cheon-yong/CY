@@ -29,7 +29,7 @@ public:
 	UCYItemInstance* GetItem(int32 Index);
 
 	UFUNCTION(BlueprintCallable)
-	void AddItem(TSubclassOf<UCYItemDefinition> InItemDefinitionClass);
+	void AddItem(TSubclassOf<UCYItemDefinition> InItemDefinitionClass, int StackCount = 1);
 
 	UFUNCTION(BlueprintCallable)
 	void AddItemInstance(UCYItemInstance* InItemInstance);

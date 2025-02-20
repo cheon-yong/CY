@@ -107,11 +107,11 @@ UCYItemInstance* UCYInventoryComponent::GetItem(int32 Index)
 	return InventoryList.GetItem(Index);
 }
 
-void UCYInventoryComponent::AddItem(TSubclassOf<UCYItemDefinition> InItemDefinitionClass)
+void UCYInventoryComponent::AddItem(TSubclassOf<UCYItemDefinition> InItemDefinitionClass, int StackCount)
 {
 	if (GetOwner()->HasAuthority())
 	{
-		InventoryList.AddItem(InItemDefinitionClass);
+		InventoryList.AddItem(InItemDefinitionClass, StackCount);
 	}
 }
 
