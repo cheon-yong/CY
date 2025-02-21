@@ -44,14 +44,19 @@ void UPickupableStatics::AddPickupToInventory(UCYInventoryComponent* InventoryCo
 	{
 		const FInventoryPickup& PickupInventory = Pickup->GetPickupInventory();
 
-		for (const FPickupTemplate& Template : PickupInventory.Templates)
+		if (PickupInventory.Instances.Num() > 0)
 		{
-			InventoryComponent->AddItem(Template.ItemDef, Template.StackCount);
+			for (const FPickupInstance& Instance : PickupInventory.Instances)
+			{
+				InventoryComponent->AddItemInstance(Instance.Item);
+			}
 		}
-
-		for (const FPickupInstance& Instance : PickupInventory.Instances)
+		else
 		{
-			InventoryComponent->AddItemInstance(Instance.Item);
+			for (const FPickupTemplate& Template : PickupInventory.Templates)
+			{
+				InventoryComponent->AddItem(Template.ItemDef, Template.StackCount);
+			}
 		}
 	}
 }
