@@ -81,6 +81,7 @@ void UCYAbilitySystemComponent::InitAbilityActorInfo(AActor* InOwnerActor, AActo
 	
 }
 
+UE_DISABLE_OPTIMIZATION
 void UCYAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InputTag)
 {
 	if (!InputTag.IsValid())
@@ -97,6 +98,7 @@ void UCYAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& Input
 		}
 	}
 }
+UE_ENABLE_OPTIMIZATION
 
 void UCYAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& InputTag)
 {
