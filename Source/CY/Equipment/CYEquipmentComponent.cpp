@@ -11,6 +11,7 @@
 #include "AbilitySystem/CYAbilitySystemComponent.h"
 #include "GameFramework/Character.h"
 #include <Inventory/CYItemFragment_EquippableItem.h>
+#include "AbilitySystem/CYAbilitySet.h"
 
 ////////////////////////////////////////////////////////////////////////
 //// FCYAppliedEquipmentEntry
@@ -217,7 +218,6 @@ UCYItemInstance* UCYEquipmentComponent::EquipItemInstance(UCYItemInstance* InIte
 	return Result;
 }
 
-UE_DISABLE_OPTIMIZATION
 void UCYEquipmentComponent::SpawnItemActor(UCYItemInstance* InItemInstance)
 {
 	if (APawn* OwningPawn = Cast<APawn>(GetOwner()))
@@ -230,16 +230,19 @@ void UCYEquipmentComponent::SpawnItemActor(UCYItemInstance* InItemInstance)
 		}
 	}
 }
-UE_ENABLE_OPTIMIZATION
 
 void UCYEquipmentComponent::GiveAbilityToActor(UCYItemInstance* InItemInstance)
 {
 	if (UCYAbilitySystemComponent* ASC = GetAbilitySystemComponent())
 	{
-		//for (const TObjectPtr<const ULyraAbilitySet>& AbilitySet : EquipmentCDO->AbilitySetsToGrant)
-		//{
-		//	AbilitySet->GiveToAbilitySystem(ASC, /*inout*/ &NewEntry.GrantedHandles, Result);
-		//}
+		if (const UCYItemFragment_EquippableItem* EquipInfo = InItemInstance->FindFragmentByClass<UCYItemFragment_EquippableItem>())
+		{
+			for (const TObjectPtr<const UCYAbilitySet>& AbilitySet : EquipInfo->AbilitySetsToGrant)
+			{
+				AbilitySet->GiveToAbilitySystem(ASC, /*inout*/ &(InItemInstance->GrantedHandles), InItemInstance);
+			}
+		}
+
 	}
 }
 

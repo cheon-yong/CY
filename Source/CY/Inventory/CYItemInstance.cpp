@@ -94,7 +94,7 @@ void UCYItemInstance::SpawnEquipmentActors(const TArray<FCYEquipmentActorToSpawn
 		{
 			ACYItemActor* NewActor = GetWorld()->SpawnActorDeferred<ACYItemActor>(SpawnInfo.ActorToSpawn, FTransform::Identity, OwningPawn);
 			NewActor->Init(this);
-			NewActor->SetItemState(EItemState::Equipped);
+			NewActor->OnEquipped();
 			NewActor->FinishSpawning(FTransform::Identity, /*bIsDefaultTransform=*/ true);
 			NewActor->SetActorRelativeTransform(SpawnInfo.AttachTransform);
 			NewActor->AttachToComponent(AttachTarget, FAttachmentTransformRules::KeepRelativeTransform, SpawnInfo.AttachSocket);

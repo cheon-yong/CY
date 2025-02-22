@@ -55,7 +55,6 @@ void ACYPlayerCharacter::AddCharacterAbilities()
 {
 	if (ASC)
 	{
-		ASC->AddInputAbilities(StartInputAbilities);
 		ASC->AddAbilities(StartAbilities);
 	}
 }
@@ -82,6 +81,11 @@ void ACYPlayerCharacter::PossessedBy(AController* NewController)
 
 		OnInitASC.Broadcast(ASC);
 		OnInitASC.Clear();
+
+		for (const TObjectPtr<const UCYAbilitySet>& AbilitySet : StartAbilitySets)
+		{
+			AbilitySet->GiveToAbilitySystem(ASC, /*inout*/nullptr);
+		}
 	}
 }
 
@@ -104,5 +108,10 @@ void ACYPlayerCharacter::OnRep_PlayerState()
 
 		OnInitASC.Broadcast(ASC);
 		OnInitASC.Clear();
+
+		for (const TObjectPtr<const UCYAbilitySet>& AbilitySet : StartAbilitySets)
+		{
+			AbilitySet->GiveToAbilitySystem(ASC, /*inout*/nullptr);
+		}
 	}
 }

@@ -2,3 +2,5 @@
 
 
 #include "Inventory/CYItemFragment_EquippableItem.h"
+
+#include "AbilitySystem/CYAbilitySet.h"

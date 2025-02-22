@@ -1,12 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+#include "AbilitySystem/CYAbilitySet.h"
 
 #include "CYItemInstance.generated.h"
 
 class UCYItemFragment;
 class UCYItemDefinition;
 struct FCYEquipmentActorToSpawn;
+
 /**
  * 
  */
@@ -69,6 +71,9 @@ private:
 public:
 	UPROPERTY(BlueprintReadOnly)
 	int32 StackCount = 0;
+
+	UPROPERTY(BlueprintReadOnly)
+	FCYAbilitySet_GrantedHandles GrantedHandles;
 
 private:
 	UPROPERTY(Replicated)

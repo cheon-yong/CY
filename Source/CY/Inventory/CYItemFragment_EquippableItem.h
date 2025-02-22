@@ -8,6 +8,7 @@
 #include "CYItemFragment_EquippableItem.generated.h"
 
 class ACYItemActor;
+class UCYAbilitySet;
 
 USTRUCT(BlueprintType)
 struct FCYEquipmentActorToSpawn
@@ -36,6 +37,9 @@ class CY_API UCYItemFragment_EquippableItem : public UCYItemFragment
 	GENERATED_BODY()
 	
 public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Equipment)
+	TArray<TObjectPtr<const UCYAbilitySet>> AbilitySetsToGrant;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Equipment)
 	TArray<FCYEquipmentActorToSpawn> ActorsToSpawn;
 };

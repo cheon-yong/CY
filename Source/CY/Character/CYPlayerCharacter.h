@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Character/CYCharacter.h"
+#include "AbilitySystem/CYAbilitySet.h"
+
 #include "CYPlayerCharacter.generated.h"
 
 class USpringArmComponent;
@@ -55,7 +57,4 @@ protected:
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
-
-	UPROPERTY(EditAnywhere, Category = GAS)
-	TArray<TSubclassOf<UCYGameplayAbility>> StartInputAbilities;
 };

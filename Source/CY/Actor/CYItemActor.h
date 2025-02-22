@@ -14,6 +14,7 @@ class USkeletalMeshComponent;
 class UCYItemInstance;
 class UCYItemDefinition;
 class UBoxComponent;
+class USceneComponent;
 
 UENUM(BlueprintType)
 enum EItemState : uint8
@@ -59,6 +60,9 @@ protected:
 
 	UPROPERTY(ReplicatedUsing = OnRep_ItemState)
 	TEnumAsByte<EItemState> ItemState = EItemState::None;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<USceneComponent> SceneComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UBoxComponent> BoxComponent = nullptr;

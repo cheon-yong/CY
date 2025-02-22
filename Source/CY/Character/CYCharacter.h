@@ -7,6 +7,8 @@
 #include "Logging/LogMacros.h"
 #include "AbilitySystemInterface.h"
 #include "Team/CYTeamAgentInterface.h"
+#include <AbilitySystem/CYAbilitySet.h>
+
 #include "CYCharacter.generated.h"
 
 class AController;
@@ -77,6 +79,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = GAS)
 	TObjectPtr<UCYAttributeSet> AttributeSet;
+
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TArray<TObjectPtr<UCYAbilitySet>> StartAbilitySets;
 	
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TArray<TSubclassOf<UCYGameplayAbility>> StartAbilities;

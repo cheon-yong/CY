@@ -20,7 +20,9 @@ void UCYGA_AttackWithMonatage::ActivateAbility(const FGameplayAbilitySpecHandle 
 	UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), AttackMontage, 1.0f);
 	PlayAttackTask->OnCompleted.AddDynamic(this, &UCYGA_AttackWithMonatage::OnCompleteCallback);
 	PlayAttackTask->OnInterrupted.AddDynamic(this, &UCYGA_AttackWithMonatage::OnInterruptedCallback);
-	
+	PlayAttackTask->OnCancelled.AddDynamic(this, &UCYGA_AttackWithMonatage::OnCancelledCallback);
+	PlayAttackTask->OnBlendOut.AddDynamic(this, &UCYGA_AttackWithMonatage::OnCancelledCallback);
+
 	// Bind Something
 	BindNotify();
 
@@ -48,6 +50,14 @@ void UCYGA_AttackWithMonatage::OnCompleteCallback()
 }
 
 void UCYGA_AttackWithMonatage::OnInterruptedCallback()
+{
+	bool bReplicatedEndAbility = true;
+	bool bWasCancelled = true;
+
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicatedEndAbility, bWasCancelled);
+}
+
+void UCYGA_AttackWithMonatage::OnCancelledCallback()
 {
 	bool bReplicatedEndAbility = true;
 	bool bWasCancelled = true;

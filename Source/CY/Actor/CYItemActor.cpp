@@ -8,6 +8,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/SceneComponent.h"
 #include "Inventory/CYItemInstance.h"
 #include "Inventory/CYItemDefinition.h"
 
@@ -19,8 +20,11 @@ ACYItemActor::ACYItemActor()
 	bReplicates = true;
 	SetReplicateMovement(true);
 
+	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
+	RootComponent = SceneComponent;
+
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
-	RootComponent = BoxComponent;
+	BoxComponent->SetupAttachment(RootComponent);
 
 	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
 	SkeletalMeshComponent->SetupAttachment(RootComponent);
@@ -86,6 +90,10 @@ void ACYItemActor::OnUse()
 void ACYItemActor::SetItemState(EItemState NewState)
 {
 	ItemState = NewState;
+	if (HasAuthority())
+	{
+		OnRep_ItemState();
+	}
 }
 
 void ACYItemActor::GatherInteractionOptions(const FInteractionQuery& InteractQuery, FInteractionOptionBuilder& InteractionBuilder)

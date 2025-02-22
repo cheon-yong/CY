@@ -60,12 +60,14 @@ UCYItemInstance* FCYItemList::AddItem(UCYItemInstance* InItemInstance, bool bAdd
 	{
 		FCYItemEntry& AddedItem = Entries.AddDefaulted_GetRef();
 		AddedItem.Instance = InItemInstance;
+		AddedItem.Instance->Rename(nullptr, OwnerComponent->GetOwner());
 		MarkItemDirty(AddedItem);
 		return AddedItem.Instance;
 	}
 
 	FCYItemEntry Item;
 	Item.Instance = InItemInstance;
+	Item.Instance->Rename(nullptr, OwnerComponent->GetOwner());
 	Entries[EmptyIndex] = Item;
 	MarkItemDirty(Item);
 	return Item.Instance;
@@ -76,6 +78,7 @@ UCYItemInstance* FCYItemList::AddItem(UCYItemInstance* InItemInstance, int32 Ind
 {
 	FCYItemEntry Item;
 	Item.Instance = InItemInstance;
+	Item.Instance->Rename(nullptr, OwnerComponent->GetOwner());
 	Entries[Index] = Item;
 	MarkItemDirty(Item);
 

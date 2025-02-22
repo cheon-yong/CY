@@ -42,6 +42,8 @@ void ACYCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	
 }
 
 void ACYCharacter::PossessedBy(AController* NewController)

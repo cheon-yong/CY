@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "Logging/LogMacros.h"
 
 #define LOG_LOCALROLEINFO *(UEnum::GetValueAsString(TEXT("Engine.ENetRole"), GetLocalRole()))
 #define LOG_REMOTEROLEINFO *(UEnum::GetValueAsString(TEXT("Engine.ENetRole"), GetRemoteRole()))
@@ -11,5 +11,6 @@
 
 #define CY_LOG(LogCat, Verbosity, Format, ...) UE_LOG(LogCat, Verbosity, TEXT("[%s][%s/%s] %s %s"), LOG_NETMODEINFO, LOG_LOCALROLEINFO, LOG_REMOTEROLEINFO, LOG_CALLINFO, *FString::Printf(Format, ##__VA_ARGS__))
 
+DECLARE_LOG_CATEGORY_EXTERN(LogCYAbilitySystem, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(LogCYNetwork, Log, All);
-
+DECLARE_LOG_CATEGORY_EXTERN(LogCYTeams, Log, All);

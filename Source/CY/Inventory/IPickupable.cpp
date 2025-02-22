@@ -38,6 +38,7 @@ TScriptInterface<IPickupable> UPickupableStatics::GetFirstPickupableFromActor(AA
 	return TScriptInterface<IPickupable>();
 }
 
+UE_DISABLE_OPTIMIZATION
 void UPickupableStatics::AddPickupToInventory(UCYInventoryComponent* InventoryComponent, TScriptInterface<IPickupable> Pickup)
 {
 	if (InventoryComponent && Pickup)
@@ -60,3 +61,4 @@ void UPickupableStatics::AddPickupToInventory(UCYInventoryComponent* InventoryCo
 		}
 	}
 }
+UE_ENABLE_OPTIMIZATION
